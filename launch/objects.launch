@@ -1,7 +1,7 @@
 <launch>
- <node name="spawn1" pkg="gazebo_ros" type="spawn_model" args="-file $(find assessment_world_2021)models/small_cylinder/model.sdf -sdf -model small -x 0 -y 0 -z 1" />
+ <node name="spawn1" pkg="gazebo_ros" type="spawn_model" args="-file $(find assessmentmobilerobots_2022)models/small_cylinder/model.sdf -sdf -model small -x 0 -y 0 -z 1" />
  
- <node name="spawn2" pkg="gazebo_ros" type="spawn_model" args="-file $(find assessment_world_2021)models/medium_cylinder/model.sdf -sdf -model medium -x 1 -y 1 -z 1" />
+ <node name="spawn2" pkg="gazebo_ros" type="spawn_model" args="-file $(find assessmentmobilerobots_2022)models/medium_cylinder/model.sdf -sdf -model medium -x 1 -y 1 -z 1" />
 
 
 
