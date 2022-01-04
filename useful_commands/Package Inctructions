@@ -7,3 +7,5 @@ cd "robot_folder_name"
 rospack find "robot_folder_name"  
 #add urdf file and mesh file into urdf & mesh folder
 roslaunch urdf_tutorial display.launch model:=`rospack find "robot_folder_name"`/urdf/"file_name.urdf" gui:=true
+
+example: roslaunch urdf_tutorial display.launch model:=`rospack find robot_design`/urdf/robot_design.urdf gui:=true
