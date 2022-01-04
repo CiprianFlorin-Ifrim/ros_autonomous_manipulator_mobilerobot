@@ -1,0 +1,9 @@
+!For future use in case of Alzeihmers. Use the following step process to create a package in the workspace!
+REFERENCE: https://gist.github.com/RobinCPC/edb4c03d69b46d60be86ac0303a24437
+
+cd src
+catkin_create_pkg "robot_folder_name"
+cd "robot_folder_name"
+rospack find "robot_folder_name"  
+#add urdf file and mesh file into urdf & mesh folder
+roslaunch urdf_tutorial display.launch model:=`rospack find "robot_folder_name"`/urdf/"file_name.urdf" gui:=true

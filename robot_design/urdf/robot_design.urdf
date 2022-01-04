@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<robot name="autonomous_robot" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- robot specifications to be reused throughout the URDF -->
+  <!-- robot base dimensions -->
+  <xacro:property name="base_width" value="0.31"/>
+  <xacro:property name="base_length" value="0.42"/>
+  <xacro:property name="base_height" value="0.18"/>
+
+  <!-- robot wheels dimensions -->
+  <xacro:property name="wheel_radius" value="0.10"/>
+  <xacro:property name="wheel_width" value="0.04"/>
+  
+  <!-- adjusts the gap between the wheel and the chassis along the y-axis -->
+  <xacro:property name="wheel_ygap" value="0.025"/>
+  
+  <!-- position the back wheels along the z-axis and x-axis appropriately --> 
+  <xacro:property name="wheel_back_zoff" value="0.05"/>
+  <xacro:property name="wheel_back_xoff" value="0.12"/>
+  
+  <!-- position the front wheels along the z-axis and x-axis appropriately --> 
+  <xacro:property name="wheel_front_zoff" value="0.05"/>
+  <xacro:property name="wheel_front_xoff" value="0.32"/>
+  
+  <!-- robot base visual -->
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="${base_length} ${base_width} ${base_height}"/>
+      </geometry>
+      <material name="Cyan">
+        <color rgba="0 1.0 1.0 1.0"/>
+      </material>
+    </visual>
+  </link>
+
+  <!-- robot footprint used to determine the center of the robot porjected to the ground -->
+  <link name="base_footprint"/>
+
+  <joint name="base_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="base_footprint"/>
+    <origin xyz="0.0 0.0 ${-(wheel_radius+wheel_zoff)}" rpy="0 0 0"/>
+  </joint>
+  
+  <!-- wheels back -->
+  <xacro:macro name="wheel" params="prefix x_reflect y_reflect">
+    <link name="${prefix}_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+        <geometry>
+            <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+        </geometry>
+        <material name="Gray">
+          <color rgba="0.5 0.5 0.5 1.0"/>
+        </material>
+      </visual>
+    </link>
+
+    <joint name="${prefix}_joint" type="continuous">
+      <parent link="base_link"/>
+      <child link="${prefix}_link"/>
+      <origin xyz="${x_reflect*wheel_back_xoff} ${y_reflect*(base_width/2+wheel_ygap)} ${-wheel_back_zoff}" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:wheel prefix="drivewhl_l_back" x_reflect="-1" y_reflect="1" />
+  <xacro:wheel prefix="drivewhl_r_back" x_reflect="-1" y_reflect="-1" />
+  
+  <!-- wheels front -->
+  <xacro:macro name="wheel" params="prefix x_reflect y_reflect">
+    <link name="${prefix}_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+        <geometry>
+            <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+        </geometry>
+        <material name="Gray">
+          <color rgba="0.5 0.5 0.5 1.0"/>
+        </material>
+      </visual>
+    </link>
+
+    <joint name="${prefix}_joint" type="continuous">
+      <parent link="base_link"/>
+      <child link="${prefix}_link"/>
+      <origin xyz="${x_reflect*wheel_front_xoff} ${y_reflect*(base_width/2+wheel_ygap)} ${-wheel_front_zoff}" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:wheel prefix="drivewhl_l_front" x_reflect="-1" y_reflect="1" />
+  <xacro:wheel prefix="drivewhl_r_front" x_reflect="-1" y_reflect="-1" />
+
+</robot>
