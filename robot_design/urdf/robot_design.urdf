@@ -9,19 +9,22 @@
 
   <!-- robot wheels dimensions -->
   <xacro:property name="wheel_radius" value="0.10"/>
-  <xacro:property name="wheel_width" value="0.04"/>
+  <xacro:property name="wheel_width" value="0.16"/>
   
   <!-- adjusts the gap between the wheel and the chassis along the y-axis -->
   <xacro:property name="wheel_ygap" value="0.025"/>
   
   <!-- position the back wheels along the z-axis and x-axis appropriately --> 
   <xacro:property name="wheel_back_zoff" value="0.05"/>
-  <xacro:property name="wheel_back_xoff" value="0.12"/>
+  <xacro:property name="wheel_back_xoff" value="0.30"/>
   
   <!-- position the front wheels along the z-axis and x-axis appropriately --> 
   <xacro:property name="wheel_front_zoff" value="0.05"/>
-  <xacro:property name="wheel_front_xoff" value="-0.12"/>
-
+  <xacro:property name="wheel_front_xoff" value="-0.08"/>
+  
+  <!-- cylinder radius -->
+  <xacro:property name="cylinder_radius" value="0.025"/>
+  
 <!-- Define intertial property macros  -->
   <xacro:macro name="box_inertia" params="m w h d">
     <inertial>
@@ -176,5 +179,232 @@
   <xacro:wheel prefix="drivewhl_r_front" x_reflect="-1" y_reflect="-1" />
   
   
+<!-- manipulator arm - first joint -->   
+    <link name="first_joint">
+      <visual>
+        <geometry>
+          <cylinder length="0.4" radius="${cylinder_radius}"/>
+        </geometry>
+        <origin rpy="0 1.57075 0 " xyz="-0.20 0 0"/>
+      </visual>
+    </link>  
+    
+    <joint name="first_joint_base" type="revolute">
+      <axis xyz="0 1 0"/>
+      <limit effort="1000.0" lower="-0.7" upper="1.35" velocity="0.5"/>
+      <parent link="base_link"/>
+      <child link="first_joint"/>
+      <origin rpy="0 1.5708 0" xyz="0 0 0.09"/>
+    </joint>
+  
+  
+<!-- manipulator arm - first joint enclosure --> 
+    <link name="first_joint_enclosure">
+      <visual>
+        <geometry>
+          <box size="${base_length/5} ${base_width/5} ${base_height/2}"/>
+        </geometry>
+        <origin rpy="0 0 0 " xyz="0 0 0"/>
+      </visual>
+    </link>
+    
+    <joint name="first_joint_enclosure_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="first_joint_enclosure"/>
+      <origin rpy="0 0 0" xyz="0 0 0.13"/>
+    </joint> 
+    
+  
+<!-- manipulator arm - second joint --> 
+    <link name="second_joint">
+      <visual>
+        <geometry>
+          <cylinder length="0.6" radius="${cylinder_radius}"/>
+        </geometry>
+        <origin rpy="0 1.5708 0 " xyz="0.278 0 0"/>
+      </visual>
+    </link>
+    
+    <joint name="second_joint_base" type="revolute">
+      <axis xyz="0 1 0"/>
+      <limit effort="1000.0" lower="-1.0" upper="1.0" velocity="0.5"/>
+      <parent link="first_joint"/>
+      <child link="second_joint"/>
+      <origin rpy="0 -1.5708 0" xyz="-0.4 0 0"/>
+    </joint>
+
+
+<!-- manipulator arm - second joint enclosure --> 
+    <link name="second_joint_enclosure">
+      <visual>
+        <geometry>
+          <box size="${base_length/5} ${base_width/5} ${base_height/2}"/>
+        </geometry>
+        <origin rpy="0 0 0 " xyz="0.0 0 0"/>
+      </visual>
+    </link>
+    
+    <joint name="second_joint_enclosure_joint" type="fixed">
+      <parent link="first_joint"/>
+      <child link="second_joint_enclosure"/>
+      <origin rpy="0 0 0" xyz="-0.4 0 0"/>
+    </joint> 
+
+
+<!-- manipulator arm - third joint --> 
+    <link name="third_joint">
+      <visual>
+        <geometry>
+          <cylinder length="0.2" radius="${cylinder_radius}"/>
+        </geometry>
+        <origin rpy="0 1.5708 0 " xyz="0.098 0 0"/>
+      </visual>
+    </link>
+    
+    <joint name="third_joint_base" type="revolute">
+      <axis xyz="0 1 0"/>
+      <limit effort="1000.0" lower="-1.35" upper="1.35" velocity="0.5"/>
+      <parent link="second_joint"/>
+      <child link="third_joint"/>
+      <origin rpy="0 0 0" xyz="0.58 0 0"/>
+    </joint> 
+    
+
+<!-- manipulator arm - third joint enclosure --> 
+    <link name="third_joint_enclosure">
+      <visual>
+        <geometry>
+          <box size="${base_length/5} ${base_width/5} ${base_height/2}"/>
+        </geometry>
+        <origin rpy="0 0 0 " xyz="0.0 0 0"/>
+      </visual>
+    </link>
+    
+    <joint name="third_joint_enclosure_joint" type="fixed">
+      <parent link="second_joint"/>
+      <child link="third_joint_enclosure"/>
+      <origin rpy="0 0 0" xyz="0.58 0 0"/>
+    </joint> 
+
+    
+<!-- manipulator arm - grabber fixture --> 
+    <link name="grabber_fixture">
+      <visual>
+        <geometry>
+          <box size="${base_length} ${base_width/5} ${base_height/3}"/>
+        </geometry>
+        <origin rpy="0 0 1.5708 " xyz="0 0 0"/>
+      </visual>
+    </link>
+    
+    <joint name="grabber_fixture_joint" type="fixed">
+      <parent link="third_joint"/>
+      <child link="grabber_fixture"/>
+      <origin rpy="0 0 0" xyz="0.2 0 0"/>
+    </joint> 
+    
+
+<!-- manipulator arm - grabber fixture left --> 
+    <link name="grabber_fixture_left">
+      <visual>
+        <geometry>
+          <cylinder length="0.3" radius="${cylinder_radius}"/>
+        </geometry>
+        <origin rpy="-1.5708 0 0" xyz="0 0.13 0"/>
+      </visual>
+    </link>
+    
+    <joint name="grabber_fixture_left_joint" type="prismatic">
+      <axis xyz="0 1 0"/>
+      <limit effort="1000.0" lower="0" upper="0.20" velocity="0.5"/>
+      <parent link="grabber_fixture"/>
+      <child link="grabber_fixture_left"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </joint> 
+
+  
+<!-- manipulator arm - grabber fixture right --> 
+    <link name="grabber_fixture_right">
+      <visual>
+        <geometry>
+          <cylinder length="0.3" radius="${cylinder_radius}"/>
+        </geometry>
+        <origin rpy="1.5708 0 0" xyz="0 -0.13 0"/>
+      </visual>
+    </link>
+    
+    <joint name="grabber_fixture_right_joint" type="prismatic">
+      <axis xyz="0 -1 0"/>
+      <limit effort="1000.0" lower="0" upper="0.20" velocity="0.5"/>
+      <parent link="grabber_fixture"/>
+      <child link="grabber_fixture_right"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </joint> 
+    
+    
+<!-- manipulator arm - left gripper -->   
+    <joint name="left_gripper_joint" type="revolute">
+      <axis xyz="0 0 1"/>
+      <limit effort="1000.0" lower="-0.548" upper="0.548" velocity="0.5"/>
+      <origin rpy="0 0 0" xyz="0.02 0.28 0"/>
+      <parent link="grabber_fixture_left"/>
+      <child link="left_gripper"/>
+    </joint>
+  
+    <link name="left_gripper">
+      <visual>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry>
+          <mesh filename="package://urdf_tutorial/meshes/l_finger.dae"/>
+        </geometry>
+      </visual>
+    </link>
+  
+    <joint name="left_tip_joint" type="fixed">
+      <parent link="left_gripper"/>
+      <child link="left_tip"/>
+    </joint>
+  
+    <link name="left_tip">
+      <visual>
+        <origin rpy="0 0 0" xyz="0.09137 0.00495 0"/>
+        <geometry>
+          <mesh filename="package://urdf_tutorial/meshes/l_finger_tip.dae"/>
+        </geometry>
+      </visual>
+    </link>
+    
+    
+<!-- manipulator arm - right gripper -->  
+    <joint name="right_gripper_joint" type="revolute">
+      <axis xyz="0 0 -1"/>
+      <limit effort="1000.0" lower="-0.548" upper="0.548" velocity="0.5"/>
+      <origin rpy="0 0 0" xyz="0.02 -0.28 0"/>
+      <parent link="grabber_fixture_right"/>
+      <child link="right_gripper"/>
+    </joint>
+  
+    <link name="right_gripper">
+      <visual>
+        <origin rpy="-3.1415 0 0" xyz="0 0 0"/>
+        <geometry>
+          <mesh filename="package://urdf_tutorial/meshes/l_finger.dae"/>
+        </geometry>
+      </visual>
+    </link>
+  
+    <joint name="right_tip_joint" type="fixed">
+      <parent link="right_gripper"/>
+      <child link="right_tip"/>
+    </joint>
+  
+    <link name="right_tip">
+      <visual>
+        <origin rpy="-3.1415 0 0" xyz="0.09137 0.00495 0"/>
+        <geometry>
+          <mesh filename="package://urdf_tutorial/meshes/l_finger_tip.dae"/>
+        </geometry>
+      </visual>
+    </link>
 
 </robot>
