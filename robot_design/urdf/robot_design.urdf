@@ -33,7 +33,7 @@
   <xacro:property name="wheel_width" value="${0.20/scale}"/>
   
   <!-- adjusts the gap between the wheel and the chassis along the y-axis -->
-  <xacro:property name="wheel_ygap" value="${0.095/scale}"/>
+  <xacro:property name="wheel_ygap" value="${0.11/scale}"/>
   
   <!-- position the back wheels along the z-axis and x-axis appropriately --> 
   <xacro:property name="wheel_back_zoff" value="0.05"/>
@@ -77,7 +77,7 @@
   
 <!-- robot base visual -->
   <gazebo reference="base_link">
-    <material>Gazebo/Black</material>
+    <material>Gazebo/FlatBlack</material>
   </gazebo>
 
   <link name="base_link">
@@ -112,7 +112,7 @@
     
 <!-- wheels back -->
   <xacro:macro name="wheel" params="prefix x_reflect y_reflect">
-    <gazebo reference="${prefix}_front_link">
+    <gazebo reference="${prefix}_back_link">
       <material>Gazebo/Cyan</material>
     </gazebo>
     
@@ -149,10 +149,9 @@
   <xacro:wheel prefix="drivewhl_r_back" x_reflect="-1" y_reflect="-1" />
   
 <!-- wheels middle -->
-
   <xacro:macro name="wheel" params="prefix x_reflect y_reflect">
-    <gazebo reference="${prefix}_front_link">
-      <material>Gazebo/Cyan</material>
+    <gazebo reference="${prefix}_middle_link">
+      <material>Gazebo/White</material>
     </gazebo>
     
     <link name="${prefix}_middle_link">
@@ -224,7 +223,7 @@
   <xacro:wheel prefix="drivewhl_l_front" x_reflect="-1" y_reflect="1" />
   <xacro:wheel prefix="drivewhl_r_front" x_reflect="-1" y_reflect="-1" />
 
-  
+
 <!-- manipulator arm - first joint -->  
   <gazebo reference="first_joint">
     <material>Gazebo/White</material>
@@ -247,7 +246,7 @@
         </geometry>
       </collision>
       
-      <xacro:cylinder_inertia m="0.5" r="${cylinder_radius}" h="${0.4/scale}"/> 
+      <xacro:cylinder_inertia m="0.2" r="${cylinder_radius}" h="${0.4/scale}"/> 
     </link>  
     
     <joint name="first_joint_base" type="revolute">
@@ -281,7 +280,7 @@
       </geometry>
     </collision>
 
-    <xacro:box_inertia m="15" w="${base_width/8}" d="${base_length/8}" h="${base_height/2}"/>
+    <xacro:box_inertia m="1" w="${base_width/8}" d="${base_length/8}" h="${base_height/2}"/>
     </link>
     
     <joint name="first_joint_enclosure_joint" type="fixed">
@@ -347,7 +346,7 @@
       </geometry>
     </collision>
 
-    <xacro:box_inertia m="15" w="${base_width/10}" d="${base_length/7}" h="${base_height/2}"/>
+    <xacro:box_inertia m="1" w="${base_width/10}" d="${base_length/7}" h="${base_height/2}"/>
     </link>
     
     <joint name="second_joint_enclosure_joint" type="fixed">
@@ -355,7 +354,6 @@
       <child link="second_joint_enclosure"/>
       <origin rpy="0 0 0" xyz="-0.4 0 0"/>
     </joint> 
-
 
 <!-- manipulator arm - third joint --> 
   <gazebo reference="third_joint">
@@ -379,7 +377,7 @@
         </geometry>
       </collision>
       
-      <xacro:cylinder_inertia m="0.5" r="${cylinder_radius}" h="${0.2/scale}"/> 
+      <xacro:cylinder_inertia m="0.2" r="${cylinder_radius}" h="${0.2/scale}"/> 
     </link>
     
     <joint name="third_joint_base" type="revolute">
@@ -413,7 +411,7 @@
        </geometry>
      </collision>
 
-     <xacro:box_inertia m="15" w="${base_width/6}" d="${base_length/6}" h="${base_height/2}"/>
+     <xacro:box_inertia m="1" w="${base_width/6}" d="${base_length/6}" h="${base_height/2}"/>
     </link>
     
     <joint name="third_joint_enclosure_joint" type="fixed">
@@ -445,7 +443,7 @@
        </geometry>
      </collision>
 
-     <xacro:box_inertia m="15" w="${base_width/1.8}" d="${base_length/8}" h="${base_height/3}"/>
+     <xacro:box_inertia m="1" w="${base_width/1.8}" d="${base_length/8}" h="${base_height/3}"/>
     </link>
     
     <joint name="grabber_fixture_joint" type="fixed">
@@ -567,6 +565,7 @@
         </geometry>
       </visual>
     </link>
+
 
 <!-- gazebo control plugin -->  
     <gazebo>
