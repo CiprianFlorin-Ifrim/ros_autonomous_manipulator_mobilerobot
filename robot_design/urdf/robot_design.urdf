@@ -50,32 +50,18 @@
   <!-- cylinder radius -->
   <xacro:property name="cylinder_radius" value="${0.025/scale}"/>
   
-<!-- Define intertial property macros  -->
-  <xacro:macro name="box_inertia" params="m w h d">
+  
+<!-- Define intertial property macro  -->
+  <xacro:macro name="default_inertial" params="mass">
     <inertial>
-      <origin xyz="0 0 0" rpy="${pi/2} 0 ${pi/2}"/>
-      <mass value="${m}"/>
-      <inertia ixx="${(m/12) * (h*h + d*d)}" ixy="0.0" ixz="0.0" iyy="${(m/12) * (w*w + d*d)}" iyz="0.0" izz="${(m/12) * (w*w + h*h)}"/>
-    </inertial>
-  </xacro:macro>
-
-  <xacro:macro name="cylinder_inertia" params="m r h">
-    <inertial>
-      <origin xyz="0 1 1" rpy="${pi/2} 0 0" />
-      <mass value="${m}"/>
-      <inertia ixx="${(m/12) * (3*r*r + h*h)}" ixy = "0" ixz = "0" iyy="${(m/12) * (3*r*r + h*h)}" iyz = "0" izz="${(m/2) * (r*r)}"/>
-    </inertial>
-  </xacro:macro>
-
-  <xacro:macro name="sphere_inertia" params="m r">
-    <inertial>
-      <mass value="${m}"/>
-      <inertia ixx="${(2/5) * m * (r*r)}" ixy="0.0" ixz="0.0" iyy="${(2/5) * m * (r*r)}" iyz="0.0" izz="${(2/5) * m * (r*r)}"/>
+      <mass value="${mass}" />
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
     </inertial>
   </xacro:macro>
   
-  
+
 <!-- robot base visual -->
+  
   <gazebo reference="base_link">
     <material>Gazebo/FlatBlack</material>
   </gazebo>
@@ -96,7 +82,7 @@
       </geometry>
     </collision>
 
-    <xacro:box_inertia m="15" w="${base_width}" d="${base_length}" h="${base_height}"/>
+    <xacro:default_inertial mass="10"/>
   </link>
   
   
@@ -111,8 +97,12 @@
     
     
 <!-- wheels back -->
-  <xacro:macro name="wheel" params="prefix x_reflect y_reflect">
+  <xacro:macro name="wheel_back" params="prefix x_reflect y_reflect">
     <gazebo reference="${prefix}_back_link">
+      <mu1 value="200.0"/>
+      <mu2 value="100.0"/>
+      <kp value="10000000.0" />
+      <kd value="1.0" />
       <material>Gazebo/Cyan</material>
     </gazebo>
     
@@ -134,7 +124,7 @@
         </geometry>
       </collision>
 
-      <xacro:cylinder_inertia m="0.5" r="${wheel_radius}" h="${wheel_width}"/>  
+    <xacro:default_inertial mass="1"/> 
     </link>
 
     <joint name="${prefix}_back_joint" type="continuous">
@@ -143,14 +133,31 @@
       <origin xyz="${x_reflect*wheel_back_xoff} ${y_reflect*(base_width/2+wheel_ygap)} ${-wheel_back_zoff}" rpy="0 0 0"/>
       <axis xyz="0 1 0"/>
     </joint>
+    
+ <!-- controller - wheels back -->
+    <transmission name="${prefix}_back_link_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <actuator name="${prefix}_back_link_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+      <joint name="${prefix}_back_joint">
+        <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      </joint>
+    </transmission>
+  
   </xacro:macro>
 
-  <xacro:wheel prefix="drivewhl_l_back" x_reflect="-1" y_reflect="1" />
-  <xacro:wheel prefix="drivewhl_r_back" x_reflect="-1" y_reflect="-1" />
+  <xacro:wheel_back prefix="drivewhl_l" x_reflect="-1" y_reflect="1" />
+  <xacro:wheel_back prefix="drivewhl_r" x_reflect="-1" y_reflect="-1" />
   
+
 <!-- wheels middle -->
-  <xacro:macro name="wheel" params="prefix x_reflect y_reflect">
+  <xacro:macro name="wheel_middle" params="prefix x_reflect y_reflect">
     <gazebo reference="${prefix}_middle_link">
+      <mu1 value="200.0"/>
+      <mu2 value="100.0"/>
+      <kp value="10000000.0" />
+      <kd value="1.0" />
       <material>Gazebo/White</material>
     </gazebo>
     
@@ -171,7 +178,7 @@
         </geometry>
       </collision>
       
-      <xacro:cylinder_inertia m="0.5" r="${wheel_radius}" h="${wheel_width}"/> 
+    <xacro:default_inertial mass="1"/>
     </link>
 
     <joint name="${prefix}_middle_joint" type="continuous">
@@ -180,15 +187,31 @@
       <origin xyz="${x_reflect*wheel_middle_xoff} ${y_reflect*(base_width/2+wheel_ygap)} ${-wheel_middle_zoff}" rpy="0 0 0"/>
       <axis xyz="0 1 0"/>
     </joint>
+    
+<!-- controller - wheels middle -->
+    <transmission name="${prefix}_middle_link_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <actuator name="${prefix}_middle_link_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+      <joint name="${prefix}_middle_joint">
+        <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      </joint>
+    </transmission>
+  
   </xacro:macro>
 
-  <xacro:wheel prefix="drivewhl_l_middle" x_reflect="-1" y_reflect="1" />
-  <xacro:wheel prefix="drivewhl_r_middle" x_reflect="-1" y_reflect="-1" />
+  <xacro:wheel_middle prefix="drivewhl_l" x_reflect="-1" y_reflect="1" />
+  <xacro:wheel_middle prefix="drivewhl_r" x_reflect="-1" y_reflect="-1" />
   
 
 <!-- wheels front -->
-  <xacro:macro name="wheel" params="prefix x_reflect y_reflect">
+  <xacro:macro name="wheel_front" params="prefix x_reflect y_reflect">
     <gazebo reference="${prefix}_front_link">
+      <mu1 value="200.0"/>
+      <mu2 value="100.0"/>
+      <kp value="10000000.0" />
+      <kd value="1.0" />
       <material>Gazebo/Cyan</material>
     </gazebo>
     
@@ -209,7 +232,7 @@
         </geometry>
       </collision>
       
-      <xacro:cylinder_inertia m="0.5" r="${wheel_radius}" h="${wheel_width}"/> 
+    <xacro:default_inertial mass="1"/>
     </link>
 
     <joint name="${prefix}_front_joint" type="continuous">
@@ -218,11 +241,24 @@
       <origin xyz="${x_reflect*wheel_front_xoff} ${y_reflect*(base_width/2+wheel_ygap)} ${-wheel_front_zoff}" rpy="0 0 0"/>
       <axis xyz="0 1 0"/>
     </joint>
+    
+    
+<!-- controller - wheels front -->
+    <transmission name="${prefix}_front_link_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <actuator name="${prefix}_front_link_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+      <joint name="${prefix}_front_joint">
+        <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      </joint>
+    </transmission>
+    
   </xacro:macro>
 
-  <xacro:wheel prefix="drivewhl_l_front" x_reflect="-1" y_reflect="1" />
-  <xacro:wheel prefix="drivewhl_r_front" x_reflect="-1" y_reflect="-1" />
-
+  <xacro:wheel_front prefix="drivewhl_l" x_reflect="-1" y_reflect="1" />
+  <xacro:wheel_front prefix="drivewhl_r" x_reflect="-1" y_reflect="-1" />
+  
 
 <!-- manipulator arm - first joint -->  
   <gazebo reference="first_joint">
@@ -244,9 +280,9 @@
         <geometry>
           <cylinder radius="${cylinder_radius}" length="${0.4/scale}"/>
         </geometry>
-      </collision>
+     </collision>
       
-      <xacro:cylinder_inertia m="0.2" r="${cylinder_radius}" h="${0.4/scale}"/> 
+     <xacro:default_inertial mass="1"/>
     </link>  
     
     <joint name="first_joint_base" type="revolute">
@@ -256,6 +292,18 @@
       <child link="first_joint"/>
       <origin rpy="0 1.5708 0" xyz="0 0 0.09"/>
     </joint>
+  
+  
+<!-- controller - third joint -->
+   <transmission name="first_joint">
+     <type>transmission_interface/SimpleTransmission</type>
+     <actuator name="first_joint">
+       <mechanicalReduction>1</mechanicalReduction>
+     </actuator>
+     <joint name="first_joint_base">
+	<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+     </joint>
+   </transmission>
   
   
 <!-- manipulator arm - first joint enclosure --> 
@@ -273,14 +321,14 @@
       </visual>
       
 <!-- collision data - first joint enclosure -->
-    <collision>
-     <origin rpy="0 0 0" xyz="0 0 0"/>
-      <geometry>
-        <box size="${base_length/8} ${base_width/8} ${base_height/2}"/>
-      </geometry>
-    </collision>
+     <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+       <geometry>
+         <box size="${base_length/8} ${base_width/8} ${base_height/2}"/>
+       </geometry>
+     </collision>
 
-    <xacro:box_inertia m="1" w="${base_width/8}" d="${base_length/8}" h="${base_height/2}"/>
+     <xacro:default_inertial mass="1"/>
     </link>
     
     <joint name="first_joint_enclosure_joint" type="fixed">
@@ -304,7 +352,7 @@
         <origin rpy="0 1.5708 0 " xyz="0.278 0 0"/>
       </visual>
       
-     <!-- collision data - second joint -->               
+<!-- collision data - second joint -->               
      <collision>
        <origin rpy="0 1.5708 0 " xyz="0.278 0 0"/>
         <geometry>
@@ -312,7 +360,7 @@
         </geometry>
       </collision>
       
-      <xacro:cylinder_inertia m="0.5" r="${cylinder_radius}" h="${0.6/scale}"/> 
+      <xacro:default_inertial mass="1"/>
     </link>
     
     <joint name="second_joint_base" type="revolute">
@@ -323,6 +371,18 @@
       <origin rpy="0 -1.5708 0" xyz="-0.4 0 0"/>
     </joint>
 
+
+<!-- controller - second joint -->
+   <transmission name="second_joint">
+     <type>transmission_interface/SimpleTransmission</type>
+     <actuator name="second_joint">
+       <mechanicalReduction>1</mechanicalReduction>
+     </actuator>
+     <joint name="second_joint_base">
+	<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+     </joint>
+   </transmission>
+   
 
 <!-- manipulator arm - second joint enclosure --> 
   <gazebo reference="second_joint_enclosure">
@@ -339,14 +399,14 @@
       </visual>
       
 <!-- collision data - second joint enclosure -->
-    <collision>
-     <origin rpy="0 0 0" xyz="0 0 0"/>
-      <geometry>
-        <box size="${base_length/10} ${base_width/7} ${base_height/2}"/>
-      </geometry>
-    </collision>
+     <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+       <geometry>
+         <box size="${base_length/10} ${base_width/7} ${base_height/2}"/>
+       </geometry>
+     </collision>
 
-    <xacro:box_inertia m="1" w="${base_width/10}" d="${base_length/7}" h="${base_height/2}"/>
+     <xacro:default_inertial mass="1"/>
     </link>
     
     <joint name="second_joint_enclosure_joint" type="fixed">
@@ -377,7 +437,7 @@
         </geometry>
       </collision>
       
-      <xacro:cylinder_inertia m="0.2" r="${cylinder_radius}" h="${0.2/scale}"/> 
+     <xacro:default_inertial mass="1"/>
     </link>
     
     <joint name="third_joint_base" type="revolute">
@@ -388,7 +448,19 @@
       <origin rpy="0 0 0" xyz="0.58 0 0"/>
     </joint> 
     
-
+    
+<!-- controller - third joint -->
+   <transmission name="third_joint">
+     <type>transmission_interface/SimpleTransmission</type>
+     <actuator name="third_joint">
+       <mechanicalReduction>1</mechanicalReduction>
+     </actuator>
+     <joint name="third_joint_base">
+	<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+     </joint>
+   </transmission>
+    
+    
 <!-- manipulator arm - third joint enclosure --> 
   <gazebo reference="third_joint_enclosure">
     <material>Gazebo/White</material>
@@ -404,14 +476,14 @@
       </visual>
       
 <!-- collision data - third joint enclosure -->
-     <collision>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-       <geometry>
-         <box size="${base_length/6} ${base_width/6} ${base_height/2}"/>
-       </geometry>
-     </collision>
+      <collision>
+       <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry>
+          <box size="${base_length/6} ${base_width/6} ${base_height/2}"/>
+        </geometry>
+      </collision>
 
-     <xacro:box_inertia m="1" w="${base_width/6}" d="${base_length/6}" h="${base_height/2}"/>
+     <xacro:default_inertial mass="1"/>
     </link>
     
     <joint name="third_joint_enclosure_joint" type="fixed">
@@ -443,7 +515,7 @@
        </geometry>
      </collision>
 
-     <xacro:box_inertia m="1" w="${base_width/1.8}" d="${base_length/8}" h="${base_height/3}"/>
+     <xacro:default_inertial mass="1"/>
     </link>
     
     <joint name="grabber_fixture_joint" type="fixed">
@@ -465,7 +537,17 @@
         </geometry>
          <material name="Grey"/>
         <origin rpy="-1.5708 0 0" xyz="0 0.13 0"/>
-      </visual>           
+      </visual>    
+      
+ <!-- collision data - fixture left -->               
+     <collision>
+       <origin rpy="-1.5708 0 0" xyz="0 0.13 0"/>
+        <geometry>
+          <cylinder length="${0.3/scale}" radius="${cylinder_radius}"/>
+        </geometry>
+      </collision>
+      
+     <xacro:default_inertial mass="1"/>       
     </link>
     
     <joint name="grabber_fixture_left_joint" type="prismatic">
@@ -476,6 +558,17 @@
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </joint> 
 
+<!-- controller - fixture left -->
+   <transmission name="grabber_fixture_left_trans">
+     <type>transmission_interface/SimpleTransmission</type>
+     <actuator name="grabber_fixture_left_motor">
+       <mechanicalReduction>1</mechanicalReduction>
+     </actuator>
+     <joint name="grabber_fixture_left_joint">
+	<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+     </joint>
+   </transmission>
+  
   
 <!-- manipulator arm - grabber fixture right --> 
   <gazebo reference="grabber_fixture_right">
@@ -490,6 +583,16 @@
          <material name="Grey"/>
         <origin rpy="1.5708 0 0" xyz="0 -0.13 0"/>
       </visual>
+      
+ <!-- collision data - fixture right -->               
+     <collision>
+       <origin rpy="1.5708 0 0" xyz="0 -0.13 0"/>
+        <geometry>
+          <cylinder length="${0.3/scale}" radius="${cylinder_radius}"/>
+        </geometry>
+      </collision>
+      
+     <xacro:default_inertial mass="1"/>   
     </link>
     
     <joint name="grabber_fixture_right_joint" type="prismatic">
@@ -500,6 +603,17 @@
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </joint> 
     
+<!-- controller - fixture right -->
+   <transmission name="grabber_fixture_right_trans">
+     <type>transmission_interface/SimpleTransmission</type>
+     <actuator name="grabber_fixture_right_motor">
+       <mechanicalReduction>1</mechanicalReduction>
+     </actuator>
+     <joint name="grabber_fixture_right_joint">
+	<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+     </joint>
+   </transmission>
+       
     
 <!-- manipulator arm - left gripper -->   
     <joint name="left_gripper_joint" type="revolute">
@@ -517,7 +631,27 @@
           <mesh filename="package://urdf_tutorial/meshes/l_finger.dae"/>
         </geometry>
       </visual>
+      
+<!-- collision data - left gripper -->     
+      <collision>
+        <geometry>
+          <mesh filename="package://urdf_tutorial/meshes/l_finger.dae"/>
+        </geometry>
+         <origin rpy="0 0 0" xyz="0 0 0"/>
+      </collision>
+      <xacro:default_inertial mass="0.05"/>
     </link>
+    
+<!-- manipulator arm - left gripper controller-->   
+    <transmission name="left_gripper_joint_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <actuator name="left_gripper_joint_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+      <joint name="left_gripper_joint">
+	<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+    </transmission>
   
     <joint name="left_tip_joint" type="fixed">
       <parent link="left_gripper"/>
@@ -531,6 +665,14 @@
           <mesh filename="package://urdf_tutorial/meshes/l_finger_tip.dae"/>
         </geometry>
       </visual>
+      
+      <collision>
+        <geometry>
+          <mesh filename="package://urdf_tutorial/meshes/l_finger_tip.dae"/>
+        </geometry>
+         <origin rpy="0 0 0" xyz="0.09137 0.00495 0"/>
+      </collision>
+      <xacro:default_inertial mass="0.05"/>
     </link>
     
     
@@ -550,8 +692,29 @@
           <mesh filename="package://urdf_tutorial/meshes/l_finger.dae"/>
         </geometry>
       </visual>
+      
+<!-- collision data - left gripper -->     
+      <collision>
+        <geometry>
+          <mesh filename="package://urdf_tutorial/meshes/l_finger.dae"/>
+        </geometry>
+         <origin rpy="-3.1415 0 0" xyz="0 0 0"/>
+      </collision>
+      <xacro:default_inertial mass="0.05"/>
     </link>
-  
+    
+<!-- manipulator arm - left gripper controller-->   
+    <transmission name="right_gripper_joint_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <actuator name="right_gripper_joint_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+      <joint name="right_gripper_joint">
+	<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+    </transmission>
+
+
     <joint name="right_tip_joint" type="fixed">
       <parent link="right_gripper"/>
       <child link="right_tip"/>
@@ -564,6 +727,14 @@
           <mesh filename="package://urdf_tutorial/meshes/l_finger_tip.dae"/>
         </geometry>
       </visual>
+      
+      <collision>
+        <geometry>
+          <mesh filename="package://urdf_tutorial/meshes/l_finger_tip.dae"/>
+        </geometry>
+         <origin rpy="-3.1415 0 0" xyz="0.09137 0.00495 0"/>
+      </collision>
+      <xacro:default_inertial mass="0.05"/>
     </link>
 
 
