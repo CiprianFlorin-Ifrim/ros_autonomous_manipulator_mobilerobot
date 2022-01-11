@@ -6,8 +6,6 @@
     <arg name="model" value="$(arg model)" />
   </include>
 
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" />
-  
   <rosparam command="load"
             file="$(find robot_design)/config/joints.yaml"
             ns="joint_state_controller" />
@@ -19,7 +17,10 @@
   <node name="rdif_control_spawner" pkg="controller_manager" type="spawner" respawn="true" output="screen"
   	args="joint_state_controller diff_drive_controller"/> 
 
+  <!--convert joint states to TF transforms for rviz-->
+  <node name="state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen"/>
 
+  <node name="rviz" pkg="rviz" type="rviz"/>
 </launch>
 
 

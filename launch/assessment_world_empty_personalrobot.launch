@@ -13,7 +13,23 @@
     <arg name="debug" value="false"/>
   </include>
   
-    <param name="robot_description" command="$(find xacro)/xacro --inorder $(find robot_design)/urdf/robot_design.urdf" />
+  <rosparam command="load"
+            file="$(find robot_design)/config/joints.yaml"
+            ns="joint_state_controller" />
+  <rosparam command="load"
+            file="$(find robot_design)/config/diffdrive.yaml"
+            ns="diff_drive_controller" />
+  
+    <!--load the controllers-->
+  <node name="rdif_control_spawner" pkg="controller_manager" type="spawner" respawn="true" output="screen"
+  	args="joint_state_controller diff_drive_controller"/> 
+  
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find robot_design)/urdf/robot_design.urdf" />
 
   <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf" args="-urdf -model robot_design -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -param robot_description" />
+  
+  <node name="state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen"/>
+
+  <node name="rviz" pkg="rviz" type="rviz"/>
+  
 </launch>
