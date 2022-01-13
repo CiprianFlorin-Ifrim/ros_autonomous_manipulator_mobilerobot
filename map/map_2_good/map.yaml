@@ -1,4 +1,4 @@
-image: /home/ros/assessment2022/src/assessmentmobilerobots_2022/generated_map/map_2_good/map.pgm
+image: /home/ros/assessment2022/src/assessmentmobilerobots_2022/map/map_2_good/map.pgm
 resolution: 0.050000
 origin: [-10.000000, -10.000000, 0.000000]
 negate: 0
