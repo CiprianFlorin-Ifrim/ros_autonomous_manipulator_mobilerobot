@@ -4,11 +4,7 @@
   <node pkg="tf" type="static_transform_publisher" name="world_to_map" args="0 0 0 0 0 0 world map 50"/>
   <node pkg="tf" type="static_transform_publisher" name="base_link_broadcaster" args="0 0 0.05 0 0 0 base_footprint base_link 50" />
 
-  <!-- Launch RViz -->
-  <include file="$(find urdf_tutorial)/launch/display.launch">
-     <arg name="model" default="$(find robot_design)/urdf/robot_design.urdf"/>
-     <arg name="rvizconfig" value="$(find assessmentmobilerobots_2022)/parameters/mobile_manipulator.rviz"/>
-  </include>
+
   
   <!-- Extended Kalman Filter from robot_pose_ekf Node-->
   <!-- Subscribe: /odom, /imu_data, /vo -->
