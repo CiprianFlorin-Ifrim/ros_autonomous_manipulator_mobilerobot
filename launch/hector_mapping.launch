@@ -1,3 +1,5 @@
+<?xml version="1.0"?>
+
 <launch>
 
   <!-- Transformation Configuration ... Setting Up the Relationships Between Coordinate Frames -->
@@ -5,6 +7,7 @@
   <node pkg="tf" type="static_transform_publisher" name="base_link_broadcaster" args="0 0 0.05 0 0 0 base_footprint base_link 50" />
 
   
+  <!-- Extended Kalman Filter from robot_pose_ekf Node-->
   <!-- Subscribe: /odom, /imu_data, /vo -->
   <!-- Publish: /robot_pose_ekf/odom_combined -->
   <remap to="odom" from="/base_truth_odom" />
@@ -14,18 +17,16 @@
     <param name="freq" value="50.0"/>
     <param name="sensor_timeout" value="1.0"/>
     <param name="odom_used" value="true"/>
-    <param name="imu_used" value="true"/>
+    <param name="imu_used" value="false"/>
     <param name="vo_used" value="false"/>
     <param name="gps_used" value="false"/>
     <param name="debug" value="false"/>
     <param name="self_diagnose" value="false"/>
   </node>
   
-  
   <arg name="x_pos" default="0.0"/>
   <arg name="y_pos" default="0.0"/>
   <arg name="z_pos" default="0.0"/>
-
 
   <arg name="gui" default="true"/>
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -60,5 +61,19 @@
 
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen"/>
 
-  
+  <!--load the hector mapping-->
+  <arg name="geotiff_map_file_path" default="$(find hector_geotiff)/maps"/>
+
+  <param name="/use_sim_time" value="true"/>
+
+  <node pkg="rviz" type="rviz" name="rviz"
+    args="-d $(find hector_slam_launch)/rviz_cfg/mapping_demo.rviz"/>
+
+  <include file="$(find hector_mapping)/launch/mapping_default.launch"/>
+
+  <include file="$(find hector_geotiff_launch)/launch/geotiff_mapper.launch">
+    <arg name="trajectory_source_frame_name" value="scanmatcher_frame"/>
+    <arg name="map_file_path" value="$(arg geotiff_map_file_path)"/>
+  </include>
+
 </launch>
