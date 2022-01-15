@@ -763,7 +763,7 @@
         </noise>
       </ray>
       <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
-        <topicName>scan</topicName>
+        <topicName>robot_design/laser/scan</topicName>
         <frameName>sensor_laser</frameName>
       </plugin>
     </sensor>
@@ -869,7 +869,7 @@
   <alwaysOn>true</alwaysOn>
   <updateRate>50.0</updateRate>
   <bodyName>base_link</bodyName>
-  <topicName>base_truth_odom</topicName>
+  <topicName>/base_truth_odom</topicName>
   <gaussianNoise>0.01</gaussianNoise>
   <frameName>world</frameName>
   <xyzOffsets>0 0 0</xyzOffsets>
