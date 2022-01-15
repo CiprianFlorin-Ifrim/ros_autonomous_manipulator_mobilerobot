@@ -361,10 +361,10 @@
     
     <joint name="second_joint_base" type="revolute">
       <axis xyz="0 1 0"/>
-      <limit effort="1000.0" lower="-1.0" upper="1.0" velocity="0.5"/>
+      <limit effort="1000.0" lower="0.0" upper="4.2" velocity="0.5"/>
       <parent link="first_joint"/>
       <child link="second_joint"/>
-      <origin rpy="0 -1.5708 0" xyz="${-0.4/scale} ${0/scale} ${0/scale}"/>
+      <origin rpy="0 1.5708 0" xyz="${-0.4/scale} ${0/scale} ${0/scale}"/>
     </joint>
 
 
@@ -441,7 +441,7 @@
       <limit effort="1000.0" lower="-1.35" upper="1.35" velocity="0.5"/>
       <parent link="second_joint"/>
       <child link="third_joint"/>
-      <origin rpy="0 0 0" xyz="${0.58/scale} ${0/scale} ${0/scale}"/>
+      <origin rpy="0 -1.5708 0" xyz="${0.58/scale} ${0/scale} ${0/scale}"/>
     </joint> 
     
     
@@ -817,7 +817,7 @@
     </sensor>
   </gazebo>
   
- <!-- IMU scanner link -->  
+<!-- IMU scanner link -->  
   <link name="sensor_imu">
     <inertial>
       <mass value="${0.001/scale}"/>
@@ -827,20 +827,21 @@
     <visual>
       <origin rpy="0 0 0" xyz="${0/scale} ${0/scale} ${0/scale}"/>
       <geometry>
-        <box size="0.001 0.001 0.001"/>
+        <box size="${base_length/10} ${base_width/10} ${base_height/10}"/>
       </geometry>
     </visual>
+<!-- IMU scanner collision data-->     
     <collision>
       <origin rpy="0 0 0" xyz="${0/scale} ${0/scale} ${0/scale}"/>
       <geometry>
-        <box size=".001 .001 .001"/>
+        <box size="${base_length/10} ${base_width/10} ${base_height/10}"/>
       </geometry>
     </collision>
   </link>
 
   <joint name="imu_joint" type="fixed">
     <axis xyz="1 0 0"/> <!-- 0 1 0 -->
-      <origin xyz="-0.350 0 0.115"/>
+      <origin xyz="${0/scale} ${0/scale} ${-0.05/scale}"/>
       <parent link="base_link"/>
       <child link="sensor_imu"/>
   </joint>
