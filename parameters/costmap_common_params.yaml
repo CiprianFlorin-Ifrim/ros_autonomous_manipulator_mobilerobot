@@ -4,8 +4,8 @@ obstacle_range: 10.0
 # Outside of this range is considered free space
 raytrace_range: 15.0
 
-# Footprint of the robot with (0,0) being the center (in meters)
-footprint: [[-1.25, -0.66], [-1.25, 0.66], [1.25, 0.66], [1.25, -0.66]]
+# Footprint of the robot 
+footprint: [[-0.275, -0.275], [-0.275, 0.275], [0.275, 0.275], [0.275, -0.275]]
 
 # The static map created using SLAM is being published to this topic
 map_topic: /map
@@ -23,13 +23,13 @@ update_frequency: 5.0
 publish_frequency: 5.0
 
 # Delay in transform tf data that is tolerable in seconds
-transform_tolerance: 0.2
+transform_tolerance: 0.3
 
 # Width of the map in meters
-width: 75
+width: 20
 
 # Height of the map in meters
-height: 75
+height: 20
 
 rolling_window: true
 
@@ -53,4 +53,4 @@ obstacle_layer:
 
 # Map layer that adds a cushion in meters around obstacles
 inflation_layer:
-  inflation_radius: 0.5
+  inflation_radius: 0.1
