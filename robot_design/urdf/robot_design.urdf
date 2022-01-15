@@ -286,7 +286,7 @@
       <limit effort="1000.0" lower="-0.7" upper="1.35" velocity="0.5"/>
       <parent link="base_link"/>
       <child link="first_joint"/>
-      <origin rpy="0 1.5708 0" xyz="${0.30/scale} ${0/scale} ${0.09/scale}"/>
+      <origin rpy="0 1.5708 0" xyz="${-0.30/scale} ${0/scale} ${0.09/scale}"/>
     </joint>
   
   
@@ -330,7 +330,7 @@
     <joint name="first_joint_enclosure_joint" type="fixed">
       <parent link="base_link"/>
       <child link="first_joint_enclosure"/>
-      <origin rpy="0 0 0" xyz="${0.30/scale} ${0/scale} ${0.13/scale}"/>
+      <origin rpy="0 0 0" xyz="${-0.30/scale} ${0/scale} ${0.13/scale}"/>
     </joint> 
     
   
@@ -364,7 +364,7 @@
       <limit effort="1000.0" lower="0.0" upper="4.2" velocity="0.5"/>
       <parent link="first_joint"/>
       <child link="second_joint"/>
-      <origin rpy="0 1.5708 0" xyz="${-0.4/scale} ${0/scale} ${0/scale}"/>
+      <origin rpy="0 -1.5708 0" xyz="${-0.4/scale} ${0/scale} ${0/scale}"/>
     </joint>
 
 
@@ -441,7 +441,7 @@
       <limit effort="1000.0" lower="-1.35" upper="1.35" velocity="0.5"/>
       <parent link="second_joint"/>
       <child link="third_joint"/>
-      <origin rpy="0 -1.5708 0" xyz="${0.58/scale} ${0/scale} ${0/scale}"/>
+      <origin rpy="0 1.5708 0" xyz="${0.58/scale} ${0/scale} ${0/scale}"/>
     </joint> 
     
     
@@ -740,14 +740,14 @@
   <material>Gazebo/Cyan</material>
    <sensor type="ray" name="head_hokuyo_sensor">
       <pose>0 0 0 0 0 0</pose>
-      <visualize>false</visualize>
-      <update_rate>20</update_rate>
+      <visualize>true</visualize>
+      <update_rate>50</update_rate>
       <ray>
         <scan>
           <horizontal>
             <samples>720</samples>
             <resolution>1</resolution>
-            <min_angle>0</min_angle>
+            <min_angle>-3.14159</min_angle>
             <max_angle>3.14159</max_angle>
           </horizontal>
         </scan>
@@ -763,7 +763,7 @@
         </noise>
       </ray>
       <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
-        <topicName>robot_design/laser/scan</topicName>
+        <topicName>/scan</topicName>
         <frameName>sensor_laser</frameName>
       </plugin>
     </sensor>
@@ -869,7 +869,7 @@
   <alwaysOn>true</alwaysOn>
   <updateRate>50.0</updateRate>
   <bodyName>base_link</bodyName>
-  <topicName>/base_truth_odom</topicName>
+  <topicName>base_truth_odom</topicName>
   <gaussianNoise>0.01</gaussianNoise>
   <frameName>world</frameName>
   <xyzOffsets>0 0 0</xyzOffsets>
