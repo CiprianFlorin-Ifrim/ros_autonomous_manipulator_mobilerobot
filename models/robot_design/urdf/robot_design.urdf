@@ -75,14 +75,21 @@
   </xacro:macro>
   
 <!--################################# BASE #####################################-->  
-<!-- robot base visual -->
   <!-- development note: dummy link as a workaround for warning: -->
-  <!-- "The root link base_link has an inertia specified in the URDF, but KDL does not support a root link with an inertia" -->
-  <gazebo reference="base_link">
+  <!-- "The root link chassis has an inertia specified in the URDF, but KDL does not support a root link with an inertia" -->
+  <link name="base_link" />
+
+  <joint name="base_link_joint" type="fixed">
+    <parent link="base_link" />
+    <child link="chassis" />
+  </joint>
+  
+<!-- robot base visual -->
+  <gazebo reference="chassis">
     <material>Gazebo/FlatBlack</material>
   </gazebo>
 
-  <link name="base_link">
+  <link name="chassis">
     <visual>
       <geometry>
         <box size="${base_length} ${base_width} ${base_height}"/>
@@ -104,8 +111,8 @@
 <!-- wheels back -->
   <xacro:macro name="wheel_back" params="prefix x_reflect y_reflect">
     <gazebo reference="${prefix}_back_link">
- 	<mu1 value="200"/>
- 	<mu2 value="100"/>
+ 	<mu1 value="1.0"/>
+ 	<mu2 value="1.0"/>
  	<kp value="10000000.0" />
  	<kd value="1.0" />
  	<fdir1 value="1 0 0"/>
@@ -134,7 +141,7 @@
     </link>
 
     <joint name="${prefix}_back_joint" type="continuous">
-      <parent link="base_link"/>
+      <parent link="chassis"/>
       <child link="${prefix}_back_link"/>
       <origin xyz="${(x_reflect*wheel_back_xoff)} ${y_reflect*(base_width/2+wheel_ygap)} ${-wheel_back_zoff}" rpy="0 0 0"/>
       <axis xyz="0 1 0"/>
@@ -160,8 +167,8 @@
 <!-- wheels middle -->
   <xacro:macro name="wheel_middle" params="prefix x_reflect y_reflect">
     <gazebo reference="${prefix}_middle_link">
- 	<mu1 value="200"/>
- 	<mu2 value="100"/>
+ 	<mu1 value="1.0"/>
+ 	<mu2 value="1.0"/>
  	<kp value="10000000.0" />
  	<kd value="1.0" />
  	<fdir1 value="1 0 0"/>
@@ -189,7 +196,7 @@
     </link>
 
     <joint name="${prefix}_middle_joint" type="continuous">
-      <parent link="base_link"/>
+      <parent link="chassis"/>
       <child link="${prefix}_middle_link"/>
       <origin xyz="${x_reflect*wheel_middle_xoff} ${y_reflect*(base_width/2+wheel_ygap)} ${-wheel_middle_zoff}" rpy="0 0 0"/>
       <axis xyz="0 1 0"/>
@@ -215,8 +222,8 @@
 <!-- wheels front -->
   <xacro:macro name="wheel_front" params="prefix x_reflect y_reflect">
     <gazebo reference="${prefix}_front_link">
- 	<mu1 value="200"/>
- 	<mu2 value="100"/>
+ 	<mu1 value="1.0"/>
+ 	<mu2 value="1.0"/>
  	<kp value="10000000.0" />
  	<kd value="1.0" />
  	<fdir1 value="1 0 0"/>
@@ -244,7 +251,7 @@
     </link>
 
     <joint name="${prefix}_front_joint" type="continuous">
-      <parent link="base_link"/>
+      <parent link="chassis"/>
       <child link="${prefix}_front_link"/>
       <origin xyz="${x_reflect*wheel_front_xoff} ${y_reflect*(base_width/2+wheel_ygap)} ${-wheel_front_zoff}" rpy="0 0 0"/>
       <axis xyz="0 1 0"/>
@@ -296,7 +303,7 @@
     <joint name="first_joint_base" type="revolute">
       <axis xyz="0 1 0"/>
       <limit effort="1000.0" lower="-0.7" upper="1.35" velocity="0.5"/>
-      <parent link="base_link"/>
+      <parent link="chassis"/>
       <child link="first_joint"/>
       <origin rpy="0 1.5708 0" xyz="${-0.30/scale} ${0/scale} ${0.09/scale}"/>
     </joint>
@@ -340,7 +347,7 @@
     </link>
     
     <joint name="first_joint_enclosure_joint" type="fixed">
-      <parent link="base_link"/>
+      <parent link="chassis"/>
       <child link="first_joint_enclosure"/>
       <origin rpy="0 0 0" xyz="${-0.30/scale} ${0/scale} ${0.13/scale}"/>
     </joint> 
@@ -636,14 +643,14 @@
       <visual>
         <origin rpy="0 0 0" xyz="${0/scale} ${0/scale} ${0/scale}"/>
         <geometry>
-          <mesh filename="package://robot_design/meshes/l_finger.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
+          <mesh filename="package://assessmentmobilerobots_2022/models/robot_design/meshes/l_finger.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
         </geometry>
       </visual>
       
 <!-- collision data - left gripper -->     
       <collision>
         <geometry>
-          <mesh filename="package://robot_design/meshes/l_finger.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
+          <mesh filename="package://assessmentmobilerobots_2022/models/robot_design/meshes/l_finger.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
         </geometry>
          <origin rpy="0 0 0" xyz="${0/scale} ${0/scale} ${0/scale}"/>
       </collision>
@@ -670,13 +677,13 @@
       <visual>  
         <origin rpy="0 0 0" xyz="${0.09137/scale} ${0.00495/scale} ${0/scale}"/>
         <geometry>
-          <mesh filename="package://robot_design/meshes/l_finger_tip.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
+          <mesh filename="package://assessmentmobilerobots_2022/models/robot_design/meshes/l_finger_tip.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
         </geometry>
       </visual>
       
       <collision>
         <geometry>
-          <mesh filename="package://robot_design/meshes/l_finger_tip.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
+          <mesh filename="package://assessmentmobilerobots_2022/models/robot_design/meshes/l_finger_tip.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
         </geometry>
          <origin rpy="0 0 0" xyz="${0.09137/scale} ${0.00495/scale} ${0/scale}"/>
       </collision>
@@ -697,14 +704,14 @@
       <visual>
         <origin rpy="-3.1415 0 0" xyz="${0/scale} ${0/scale} ${0/scale}"/>
         <geometry>
-          <mesh filename="package://robot_design/meshes/l_finger.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
+          <mesh filename="package://assessmentmobilerobots_2022/models/robot_design/meshes/l_finger.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
         </geometry>
       </visual>
       
 <!-- collision data - right gripper -->     
       <collision>
         <geometry>
-          <mesh filename="package://robot_design/meshes/l_finger.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
+          <mesh filename="package://assessmentmobilerobots_2022/models/robot_design/meshes/l_finger.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
         </geometry>
          <origin rpy="-3.1415 0 0" xyz="${0/scale} ${0/scale} ${0/scale}"/>
       </collision>
@@ -732,13 +739,13 @@
       <visual>
         <origin rpy="-3.1415 0 0" xyz="${0.09137/scale} ${0.00495/scale} ${0/scale}"/>
         <geometry>
-          <mesh filename="package://robot_design/meshes/l_finger_tip.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
+          <mesh filename="package://assessmentmobilerobots_2022/models/robot_design/meshes/l_finger_tip.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
         </geometry>
       </visual>
       
       <collision>
         <geometry>
-          <mesh filename="package://robot_design/meshes/l_finger_tip.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
+          <mesh filename="package://assessmentmobilerobots_2022/models/robot_design/meshes/l_finger_tip.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
         </geometry>
          <origin rpy="-3.1415 0 0" xyz="${0.09137/scale} ${0.00495/scale} ${0/scale}"/>
       </collision>
@@ -805,7 +812,7 @@
 
     <joint name="joint_sensor_laser" type="fixed">
       <origin rpy="0 0 0" xyz="${0/scale} ${0/scale} ${0.12/scale}"/>
-      <parent link="base_link"/>
+      <parent link="chassis"/>
       <child link="sensor_laser"/>
     </joint> 
 
@@ -856,7 +863,7 @@
   <joint name="imu_joint" type="fixed">
     <axis xyz="1 0 0"/> <!-- 0 1 0 -->
       <origin xyz="${0/scale} ${0/scale} ${-0.1/scale}"/>
-      <parent link="base_link"/>
+      <parent link="chassis"/>
       <child link="sensor_imu"/>
   </joint>
 
@@ -874,21 +881,9 @@
 
 <gazebo>
      <plugin name="joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
-        <jointName>first_joint_base, second_joint_base, third_joint_base, grabber_fixture_left_joint, grabber_fixture_right_joint</jointName>
+        <jointName>first_joint_base, second_joint_base, third_joint_base, grabber_fixture_left_joint, grabber_fixture_right_joint, left_gripper_joint, right_gripper_joint </jointName>
      </plugin>
 </gazebo>
-  
-<gazebo>
-<plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
-  <alwaysOn>true</alwaysOn>
-  <updateRate>50.0</updateRate>
-  <bodyName>base_link</bodyName>
-  <topicName>odom</topicName>
-  <gaussianNoise>0.01</gaussianNoise>
-  <frameName>world</frameName>
-  <xyzOffsets>0 0 0</xyzOffsets>
-  <rpyOffsets>0 0 0</rpyOffsets>
-</plugin>
-</gazebo>
+
 
 </robot>
