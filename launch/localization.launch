@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<launch>
+    <include file="$(find assessmentmobilerobots_2022)/launch/assessment_world_empty_personalrobot.launch"/>
+    <!-- arguments are defined here-->
+    <arg name="map_file"      default="$(find assessmentmobilerobots_2022)/map/map_2_good/map.yaml"/> 
+    <arg name="initial_pose_x" default="-5.0"/>
+    <arg name="initial_pose_y" default="0.0"/>
+    <arg name="initial_pose_a" default="0.0"/>
+ 
+  <!--map_server ROS Node, offers map data as a ROS Service. It also provides the map_saver 
+  command-line utility, which allows dynamically generated maps to be saved to file.
+  This provides the map to amcl-->
+  <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)" output="screen"/>
+
+
+  <!--AMCL is a probabilistic localization system for a robot moving in 2D. The adaptive adaptive localization approach 
+  uses a particle filter to track the pose of a robot against a known map. amcl takes in a laser-based map, laser scans, 
+  and transform messages, and outputs pose estimates. On startup, amcl initializes its particle filter according to the 
+  parameters provided. Note that, because of the defaults, if no parameters are set, the initial filter state will be a 
+  moderately sized particle cloud centered about (0,0,0).
+  
+  Subscribed to scan, tf, map and initialpose. -->
+  <node pkg="amcl" name="amcl" type="amcl" output="screen">
+    <!--<remap from="scan" to="scan"/>-->
+      <param name="min_particles"   value="50"/>
+      <param name="max_particles"   value="500"/>
+      <param name="global_frame_id" value="/map"/>
+      <param name="base_frame_id"   value="/base_link"/>
+      <param name="odom_frame_id"   value="/world"/>
+      <param name="use_map_topic"   value="true"/>
+      <param name="initial_pose_x"            value="$(arg initial_pose_x)"/>
+      <param name="initial_pose_y"            value="$(arg initial_pose_y)"/>
+      <param name="initial_pose_a"            value="$(arg initial_pose_a)"/>
+  </node>
+</launch>

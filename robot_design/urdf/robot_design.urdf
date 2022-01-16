@@ -22,7 +22,7 @@
 <!--################################ SCALING ###################################-->
   <!-- development note: the bigger the number the smaller the number -->
   <!-- default = 1. example: 2 = 50% size, 0.5 = 200% size -->
-  <xacro:property name="scale" value="2"/>
+  <xacro:property name="scale" value="3"/>
 
 <!--############################## DEFINITIONS #################################-->
   <!-- robot base definitions -->
@@ -52,8 +52,21 @@
   <!-- cylinder radius -->
   <xacro:property name="cylinder_radius" value="${0.025/scale}"/>
   
-  
-<!-- Define intertial property macro  -->
+  <!-- Define intertial property macro  -->
+   <xacro:macro name="box_inertia" params="m w h d">
+    <inertial>
+      <mass value="${m}"/>
+      <inertia ixx="${(m/12) * (h*h + d*d)}" ixy="0.0" ixz="0.0" iyy="${(m/12) * (w*w + d*d)}" iyz="0.0" izz="${(m/12) * (w*w + h*h)}"/>
+    </inertial>
+  </xacro:macro>
+
+  <xacro:macro name="cylinder_inertia" params="m r h">
+    <inertial>
+       <mass value="${m}"/>
+       <inertia ixx="${m*(3*r*r+h*h)/12}" ixy="0" ixz="0" iyy="${m*(3*r*r+h*h)/12}" iyz="0" izz="${m*r*r/2}" />
+    </inertial>
+  </xacro:macro>
+
   <xacro:macro name="default_inertial" params="mass">
     <inertial>
       <mass value="${mass}" />
@@ -76,24 +89,23 @@
       </geometry>
         <material name="Black"/>
     </visual>
-      
-      
-<!-- collision data - base -->
+        
+  <!-- collision data - base -->
     <collision>
       <geometry>
         <box size="${base_length} ${base_width} ${base_height}"/>
       </geometry>
     </collision>
 
-    <xacro:default_inertial mass="${100/scale}"/>
+    <xacro:box_inertia m="${3/scale}" w="${base_width}" d="${base_length}" h="${base_height}"/>
   </link>
 
 <!--################################ WHEELS ####################################-->      
 <!-- wheels back -->
   <xacro:macro name="wheel_back" params="prefix x_reflect y_reflect">
     <gazebo reference="${prefix}_back_link">
- 	<mu1 value="1.0"/>
- 	<mu2 value="1.0"/>
+ 	<mu1 value="200"/>
+ 	<mu2 value="100"/>
  	<kp value="10000000.0" />
  	<kd value="1.0" />
  	<fdir1 value="1 0 0"/>
@@ -118,7 +130,7 @@
         </geometry>
       </collision>
 
-    <xacro:default_inertial mass="${0.5/scale}"/> 
+         <xacro:cylinder_inertia m="${1/scale}" r="${wheel_radius}" h="${wheel_width}"/>  
     </link>
 
     <joint name="${prefix}_back_joint" type="continuous">
@@ -148,8 +160,8 @@
 <!-- wheels middle -->
   <xacro:macro name="wheel_middle" params="prefix x_reflect y_reflect">
     <gazebo reference="${prefix}_middle_link">
- 	<mu1 value="1.0"/>
- 	<mu2 value="1.0"/>
+ 	<mu1 value="200"/>
+ 	<mu2 value="100"/>
  	<kp value="10000000.0" />
  	<kd value="1.0" />
  	<fdir1 value="1 0 0"/>
@@ -173,7 +185,7 @@
         </geometry>
       </collision>
       
-    <xacro:default_inertial mass="${0.5/scale}"/>
+    <xacro:cylinder_inertia m="${1/scale}" r="${wheel_radius}" h="${wheel_width}"/>  
     </link>
 
     <joint name="${prefix}_middle_joint" type="continuous">
@@ -203,8 +215,8 @@
 <!-- wheels front -->
   <xacro:macro name="wheel_front" params="prefix x_reflect y_reflect">
     <gazebo reference="${prefix}_front_link">
- 	<mu1 value="1.0"/>
- 	<mu2 value="1.0"/>
+ 	<mu1 value="200"/>
+ 	<mu2 value="100"/>
  	<kp value="10000000.0" />
  	<kd value="1.0" />
  	<fdir1 value="1 0 0"/>
@@ -228,7 +240,7 @@
         </geometry>
       </collision>
       
-    <xacro:default_inertial mass="${0.5/scale}"/>
+    <xacro:cylinder_inertia m="${1/scale}" r="${wheel_radius}" h="${wheel_width}"/>  
     </link>
 
     <joint name="${prefix}_front_joint" type="continuous">
@@ -624,14 +636,14 @@
       <visual>
         <origin rpy="0 0 0" xyz="${0/scale} ${0/scale} ${0/scale}"/>
         <geometry>
-          <mesh filename="package://robot_design/meshes/l_finger.dae" scale="${0.5/scale} ${0.5/scale} ${0.5/scale}"/>
+          <mesh filename="package://robot_design/meshes/l_finger.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
         </geometry>
       </visual>
       
 <!-- collision data - left gripper -->     
       <collision>
         <geometry>
-          <mesh filename="package://robot_design/meshes/l_finger.dae" scale="${0.5/scale} ${0.5/scale} ${0.5/scale}"/>
+          <mesh filename="package://robot_design/meshes/l_finger.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
         </geometry>
          <origin rpy="0 0 0" xyz="${0/scale} ${0/scale} ${0/scale}"/>
       </collision>
@@ -658,13 +670,13 @@
       <visual>  
         <origin rpy="0 0 0" xyz="${0.09137/scale} ${0.00495/scale} ${0/scale}"/>
         <geometry>
-          <mesh filename="package://robot_design/meshes/l_finger_tip.dae" scale="${0.5/scale} ${0.5/scale} ${0.5/scale}"/>
+          <mesh filename="package://robot_design/meshes/l_finger_tip.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
         </geometry>
       </visual>
       
       <collision>
         <geometry>
-          <mesh filename="package://robot_design/meshes/l_finger_tip.dae" scale="${0.5/scale} ${0.5/scale} ${0.5/scale}"/>
+          <mesh filename="package://robot_design/meshes/l_finger_tip.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
         </geometry>
          <origin rpy="0 0 0" xyz="${0.09137/scale} ${0.00495/scale} ${0/scale}"/>
       </collision>
@@ -685,14 +697,14 @@
       <visual>
         <origin rpy="-3.1415 0 0" xyz="${0/scale} ${0/scale} ${0/scale}"/>
         <geometry>
-          <mesh filename="package://robot_design/meshes/l_finger.dae" scale="${0.5/scale} ${0.5/scale} ${0.5/scale}"/>
+          <mesh filename="package://robot_design/meshes/l_finger.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
         </geometry>
       </visual>
       
 <!-- collision data - right gripper -->     
       <collision>
         <geometry>
-          <mesh filename="package://robot_design/meshes/l_finger.dae" scale="${0.5/scale} ${0.5/scale} ${0.5/scale}"/>
+          <mesh filename="package://robot_design/meshes/l_finger.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
         </geometry>
          <origin rpy="-3.1415 0 0" xyz="${0/scale} ${0/scale} ${0/scale}"/>
       </collision>
@@ -720,18 +732,20 @@
       <visual>
         <origin rpy="-3.1415 0 0" xyz="${0.09137/scale} ${0.00495/scale} ${0/scale}"/>
         <geometry>
-          <mesh filename="package://robot_design/meshes/l_finger_tip.dae" scale="${0.5/scale} ${0.5/scale} ${0.5/scale}"/>
+          <mesh filename="package://robot_design/meshes/l_finger_tip.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
         </geometry>
       </visual>
       
       <collision>
         <geometry>
-          <mesh filename="package://robot_design/meshes/l_finger_tip.dae" scale="${0.5/scale} ${0.5/scale} ${0.5/scale}"/>
+          <mesh filename="package://robot_design/meshes/l_finger_tip.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
         </geometry>
          <origin rpy="-3.1415 0 0" xyz="${0.09137/scale} ${0.00495/scale} ${0/scale}"/>
       </collision>
       <xacro:default_inertial mass="${0.05/scale}"/>
     </link>
+
+
 
 
 <!--############################### SENSORS ##################################-->  
@@ -841,7 +855,7 @@
 
   <joint name="imu_joint" type="fixed">
     <axis xyz="1 0 0"/> <!-- 0 1 0 -->
-      <origin xyz="${0/scale} ${0/scale} ${-0.05/scale}"/>
+      <origin xyz="${0/scale} ${0/scale} ${-0.1/scale}"/>
       <parent link="base_link"/>
       <child link="sensor_imu"/>
   </joint>
@@ -860,7 +874,7 @@
 
 <gazebo>
      <plugin name="joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
-        <jointName>first_joint_base, second_joint_base, third_joint_base, grabber_fixture_left_joint, grabber_fixture_right_joint, left_gripper_joint, right_gripper_joint</jointName>
+        <jointName>first_joint_base, second_joint_base, third_joint_base, grabber_fixture_left_joint, grabber_fixture_right_joint</jointName>
      </plugin>
 </gazebo>
   
@@ -869,7 +883,7 @@
   <alwaysOn>true</alwaysOn>
   <updateRate>50.0</updateRate>
   <bodyName>base_link</bodyName>
-  <topicName>base_truth_odom</topicName>
+  <topicName>odom</topicName>
   <gaussianNoise>0.01</gaussianNoise>
   <frameName>world</frameName>
   <xyzOffsets>0 0 0</xyzOffsets>
