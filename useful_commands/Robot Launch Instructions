@@ -23,3 +23,8 @@ INSTRUCTIONS TO RUN THE LAUNCH FILES AND ROBOT IN RVIZ AND GAZEBO:
 	
 5) Load saved map using map_server for use in Rviz:
 	rosrun map_server map_server /home/ros/assessment2022/src/assessmentmobilerobots_2022/map/map_2_good/map.yaml
+	
+	
+6) Run navigation stack with turtlebot3 on any generated map:
+	roslaunch assessmentmobilerobots_2022 assessment_world_empty_turtlebot3.launch
+	roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=/home/ros/assessment2022/src/assessmentmobilerobots_2022/map/map_2_good/map.yaml
