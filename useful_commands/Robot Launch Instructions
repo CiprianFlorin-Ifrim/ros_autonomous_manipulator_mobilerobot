@@ -1,7 +1,7 @@
 INSTRUCTIONS TO RUN THE LAUNCH FILES AND ROBOT IN RVIZ AND GAZEBO:
 
 1) Check the personal URDF in RVIZ:
-	roslaunch urdf_tutorial display.launch model:=`rospack find assessmentmobilerobots_2022'/models/robot_design/urdf/robot_design.urdf" gui:=true
+	roslaunch urdf_tutorial display.launch model:=`rospack find robot_design`/urdf/robot_design.urdf gui:=true
 	
 	
 2) Check the personal URDF in the Empty Assessment World:
@@ -13,18 +13,18 @@ INSTRUCTIONS TO RUN THE LAUNCH FILES AND ROBOT IN RVIZ AND GAZEBO:
 	
 	
 4) Use URDF tutorial differential_drive tutorial to move the robot around:
-	roslaunch $(find assessmentmobilerobots_2022)/launch/diff_drive_gui.launch
+	roslaunch assessment2022/src/robot_design/launch/diff_drive_gui.launch
 	
 	
 4) Use ros teleop to move the robot around:
-	roslaunch $(find assessmentmobilerobots_2022)/launch/diff_drive_gui.launch
+	roslaunch assessment2022/src/robot_design/launch/teleop_drive.launch
 	rosrun teleop_twist_keyboard teleop_twist_keyboard.py cmd_vel:=/diff_drive_controller/cmd_vel
 	
 	
 5) Load saved map using map_server for use in Rviz:
-	rosrun map_server map_server $(find assessmentmobilerobots_2022)/map/map_2_good/map.yaml
+	rosrun map_server map_server /home/ros/assessment2022/src/assessmentmobilerobots_2022/map/map_2_good/map.yaml
 	
 	
 6) Run navigation stack with turtlebot3 on any generated map:
 	roslaunch assessmentmobilerobots_2022 assessment_world_empty_turtlebot3.launch
-	roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$(find assessmentmobilerobots_2022)/map/map_2_good/map.yaml
+	roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=/home/ros/assessment2022/src/assessmentmobilerobots_2022/map/map_2_good/map.yaml
