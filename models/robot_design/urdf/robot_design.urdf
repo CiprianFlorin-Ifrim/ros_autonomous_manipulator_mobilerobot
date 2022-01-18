@@ -816,6 +816,7 @@
       <child link="sensor_laser"/>
     </joint> 
 
+
  <!-- IMU scanner plugin --> 
   <gazebo reference="sensor_imu">
     <gravity>true</gravity>
@@ -866,6 +867,8 @@
       <parent link="chassis"/>
       <child link="sensor_imu"/>
   </joint>
+
+
 
 
 <!--############################## GAZEBO ##################################-->

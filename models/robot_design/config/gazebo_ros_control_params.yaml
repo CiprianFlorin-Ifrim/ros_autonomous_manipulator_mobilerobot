@@ -1,14 +1,14 @@
-/gazebo_ros_control/pid_gains:
-drivewhl_l_back_joint: {p: 100.0, i: 0.01, d: 10.0}
-drivewhl_r_back_joint: {p: 100.0, i: 0.01, d: 10.0}
-drivewhl_l_middle_joint: {p: 100.0, i: 0.01, d: 10.0}
-drivewhl_r_middle_joint: {p: 100.0, i: 0.01, d: 10.0}
-drivewhl_l_front_joint: {p: 100.0, i: 0.01, d: 10.0}
-drivewhl_r_front_joint: {p: 100.0, i: 0.01, d: 10.0}
-first_joint_base: {p: 100.0, i: 0.01, d: 10.0}
-second_joint_base: {p: 100.0, i: 0.01, d: 10.0}
-third_joint_base: {p: 100.0, i: 0.01, d: 10.0}
-grabber_fixture_left_joint: {p: 100.0, i: 0.01, d: 10.0}
-grabber_fixture_right_joint: {p: 100.0, i: 0.01, d: 10.0}
-left_gripper_joint: {p: 100.0, i: 0.01, d: 10.0}
-right_gripper_joint: {p: 100.0, i: 0.01, d: 10.0}
+gazebo_ros_control/pid_gains:
+  drivewhl_l_back_joint: {p: 10.0, i: 0.01, d: 1.0}
+  drivewhl_r_back_joint: {p: 10.0, i: 0.01, d: 1.0}
+  drivewhl_l_middle_joint: {p: 10.0, i: 0.01, d: 1.0}
+  drivewhl_r_middle_joint: {p: 10.0, i: 0.01, d: 1.0}
+  drivewhl_l_front_joint: {p: 10.0, i: 0.01, d: 1.0}
+  drivewhl_r_front_joint: {p: 10.0, i: 0.01, d: 1.0}
+  first_joint_base: {p: 10.0, i: 0.01, d: 1.0}
+  second_joint_base: {p: 10.0, i: 0.01, d: 1.0}
+  third_joint_base: {p: 10.0, i: 0.01, d: 1.0}
+  grabber_fixture_left_joint: {p: 10.0, i: 0.01, d: 1.0}
+  grabber_fixture_right_joint: {p: 10.0, i: 0.01, d: 1.0}
+  left_gripper_joint: {p: 10.0, i: 0.01, d: 1.0}
+  right_gripper_joint: {p: 10.0, i: 0.01, d: 1.0}
