@@ -1,18 +1,16 @@
 type: "diff_drive_controller/DiffDriveController"
-publish_rate: 50
+publish_rate: 100
 
 left_wheel: ['drivewhl_l_front_joint', 'drivewhl_l_middle_joint', 'drivewhl_l_back_joint']
 right_wheel: ['drivewhl_r_front_joint', 'drivewhl_r_middle_joint', 'drivewhl_r_back_joint']
 
-wheel_separation: 0.333
-wheel_radius: 0.05
+wheel_separation: 0.30
+wheel_radius: 0.0300
 
-# Odometry covariances for the encoder output of the robot. These values should
-# be tuned to your robot's sample odometry data, but these values are a good place
-# to start
-pose_covariance_diagonal: [0.001, 0.001, 1000000.0, 1000000.0, 1000000.0, 1000.0]
-twist_covariance_diagonal: [0.001, 0.001, 1000000.0, 1000000.0, 1000000.0, 1000.0]
-
+# Odometry covariances for the encoder output of the robot.
+# These values have been tuned accordingly.
+pose_covariance_diagonal: [0.00001, 0.00001, 0.00001, 0.00001, 0.00001, 0.0003]
+twist_covariance_diagonal: [0.00001, 0.00001, 0.00001, 0.00001, 0.00001, 0.0003]
 
 # Top level frame (link) of the robot description
 base_frame_id: base_link
@@ -22,7 +20,7 @@ wheel_separation_multiplier: 1.0 # default: 1.0
 wheel_radius_multiplier    : 1.0 # default: 1.0
 
 # Velocity commands timeout [s], default 0.5
-cmd_vel_timeout: 0.25
+cmd_vel_timeout: 0.5
 
 
 # Velocity and acceleration limits
@@ -44,4 +42,4 @@ angular:
       has_acceleration_limits: true
       max_acceleration       : 1.5  # rad/s^2
       has_jerk_limits        : true
-      max_jerk               : 2.5  # rad/s^3
+      max_jerk               : 2.0  # rad/s^3

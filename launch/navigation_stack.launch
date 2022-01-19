@@ -2,7 +2,7 @@
 
 <launch>	
   <include file="$(find assessmentmobilerobots_2022)/launch/amcl.launch"/> 
-
+  
   
     <!-- arguments -->
   <arg name="cmd_vel_topic" default="/diff_drive_controller/cmd_vel" />
@@ -23,6 +23,7 @@
     <remap from="odom" to="$(arg odom_topic)"/>
     <param name="DWAPlannerROS/min_vel_x" value="0.0" if="$(arg move_forward_only)" />
   </node>
+  
 </launch>
 
 

@@ -1,7 +1,7 @@
 INSTRUCTIONS TO RUN THE LAUNCH FILES AND ROBOT IN RVIZ AND GAZEBO:
 
 1) Check the personal URDF in RVIZ:
-	roslaunch urdf_tutorial display.launch model:=`rospack find assessmentmobilerobots_2022'/models/robot_design/urdf/robot_design.urdf" gui:=true
+	roslaunch urdf_tutorial display.launch model:=/home/ros/assessment2022/src/assessmentmobilerobots_2022/models/robot_design/urdf/robot_design.urdf" gui:=true
 	
 	
 2) Check the personal URDF in the Empty Assessment World:
