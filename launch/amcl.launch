@@ -5,8 +5,8 @@
     
     <!-- arguments -->
     <arg name="map_file"      default="$(find assessmentmobilerobots_2022)/map/map_2_good/map.yaml"/> 
-    <arg name="initial_pose_x" default="0.5"/>
-    <arg name="initial_pose_y" default="-0.5"/>
+    <arg name="initial_pose_x" default="5.5"/>
+    <arg name="initial_pose_y" default="-2.5"/>
     <arg name="initial_pose_a" default="0.0"/>
  
   <!-- load the map to the map server -->

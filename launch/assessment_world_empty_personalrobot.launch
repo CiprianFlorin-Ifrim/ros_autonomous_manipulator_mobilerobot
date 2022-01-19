@@ -2,11 +2,11 @@
   <!-- arguments - enable RVIZ -->
   <arg name="rviz"          default="true" /> 	
   <arg name="model"         default="$(find xacro)/xacro --inorder $(find assessmentmobilerobots_2022)/models/robot_design/urdf/robot_design.urdf"/>
-  <arg name="rvizconfig"    default="$(find assessmentmobilerobots_2022)/parameters/navigation.rviz" />
+  <arg name="rvizconfig"    default="$(find assessmentmobilerobots_2022)/parameters/manual_config.rviz" />
   
   <!-- spwan location Gazebo -->
-  <arg name="x_pos"         default="0.5"/>
-  <arg name="y_pos"         default="-0.5"/>
+  <arg name="x_pos"         default="5.5"/>
+  <arg name="y_pos"         default="-2.5"/>
   <arg name="z_pos"         default="0.0"/>
 
   <!-- load the gazebo world - disable the GUI -->  
@@ -54,4 +54,6 @@
   <group if="$(arg rviz)">
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
   </group>
+
+
 </launch>

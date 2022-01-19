@@ -107,7 +107,7 @@
       </geometry>
     </collision>
 
-    <xacro:box_inertia m="${3/scale}" w="${base_width}" d="${base_length}" h="${base_height}"/>
+    <xacro:box_inertia m="${6/scale}" w="${base_width}" d="${base_length}" h="${base_height}"/>
   </link>
 
 <!--################################ WHEELS ####################################-->      
