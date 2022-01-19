@@ -763,8 +763,7 @@
 <gazebo reference="sensor_laser">
   <material>Gazebo/Cyan</material>
    <sensor type="ray" name="head_hokuyo_sensor">
-      <pose>0 0 0 0 0 0</pose>
-      <visualize>true</visualize>
+      <visualize>false</visualize>
       <update_rate>50</update_rate>
       <ray>
         <scan>
@@ -838,7 +837,6 @@
         <frameName>sensor_imu</frameName>
         <initialOrientationAsReference>false</initialOrientationAsReference>
       </plugin>
-      <pose>0 0 0 0 0 0</pose>
     </sensor>
   </gazebo>
   
@@ -879,7 +877,7 @@
     <sensor type="camera" name="camera">
       <update_rate>30.0</update_rate>
       <camera name="head">
-        <horizontal_fov>0.55</horizontal_fov>
+        <horizontal_fov>1.0</horizontal_fov>
         <image>
           <width>800</width>
           <height>800</height>
