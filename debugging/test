@@ -1,0 +1,66 @@
+  <!-- Place map frame at odometry frame -->
+  <node pkg="tf" type="static_transform_publisher" name="map_odom_broadcaster"
+      args="0 0 0 0 0 0 map odom 100"/>
+
+    
+    
+    
+
+    <!-- gazebo joint state plugin -->  
+    <gazebo>
+         <plugin name="joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
+             <joint>first_joint_base</joint>
+             <joint>second_joint_base</joint>
+             <joint>third_joint_base</joint>
+             <joint>grabber_fixture_left_joint</joint>
+             <joint>grabber_fixture_right_joint</joint>
+             <joint>left_gripper_joint</joint>
+             <joint>right_gripper_joint</joint>
+         </plugin>
+    </gazebo>
+    
+    
+    
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/</robotNamespace>
+      <controlPeriod>0.001</controlPeriod>
+      <legacyModeNS>false</legacyModeNS>
+    </plugin>
+  </gazebo> 
+    
+
+
+    <gazebo>
+         <plugin name="omni_steering" filename="libgazebo_ros_planar_move.so">
+             <publishTF>true</publishTF>
+             <commandTopic>cmd_vel</commandTopic>
+             <robotBaseFrame>base_link</robotBaseFrame>
+             <odometryTopic>odom</odometryTopic>
+             <odometryFrame>odom</odometryFrame>
+             <odometryRate>100.0</odometryRate>
+         </plugin>
+    </gazebo>
+    
+    
+    
+    
+     <gazebo>
+      <plugin name="skid_steer_drive_controller" filename="libgazebo_ros_skid_steer_drive.so">
+        <updateRate>100.0</updateRate>
+        <robotNamespace>/</robotNamespace>
+        <leftFrontJoint>drivewhl_l_front_joint</leftFrontJoint>
+        <rightFrontJoint>drivewhl_r_front_joint</rightFrontJoint>
+        <leftRearJoint>drivewhl_l_back_joint</leftRearJoint>
+        <rightRearJoint>drivewhl_r_back_joint</rightRearJoint>
+        <wheelSeparation>${wheel_ygap+wheel_width}</wheelSeparation>
+        <wheelDiameter>${wheel_radius*2}</wheelDiameter>
+        <wheelTorque>20</wheelTorque>
+        <topicName>cmd_vel</topicName>
+        <robotBaseFrame>base_link</robotBaseFrame>
+        <odometryTopic>diff_drive_controller/odom</odometryTopic>
+        <odometryFrame>odom</odometryFrame>
+        <broadcastTF>true</broadcastTF>
+        <wheelAcceleration>25</wheelAcceleration>
+      </plugin>
+    </gazebo>
