@@ -44,7 +44,7 @@ class camera:
                 cv2.putText(frame, "Box Identified", (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 1.0,(0, 255, 0))
 
 # ---------------------------------------PROGRAM TERMINATION--------------------------------------------------
-        cv2.imshow("Multiple Color Detection in Real-TIme", frame)
+        cv2.imshow("Robot Camera View", frame)
         cv2.waitKey(3)
 
 
