@@ -1,0 +1,18 @@
+1) Assessment Launch World:
+	roslaunch assessmentmobilerobots_2022 assessment_world_boxes.launch
+	
+2) Launch Environment World for mapping/navigation purposes:
+	roslaunch assessmentmobilerobots_2022 assessment_world.launch
+	
+3) Launch TurtleBot3 for Teleop/Navigation/Mapping purposes:
+	roslaunch assessmentmobilerobots_2022 assessment_world_empty_turtlebot3.launch
+	
+4) Generate map of environment procedure:
+	Step 1 - World Gazebo: roslaunch assessmentmobilerobots_2022 assessment_world_empty_turtlebot3.launch
+	Step 2 - Rviz Mapping: roslaunch turtlebot3_slam turtlebot3_slam.launch                     
+	Step 3 - Teleop Node Robot Control: roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
+	Step 4 - Save the MAP in /home/: rosrun map_server map_saver -f ~/map
+	
+	
+REFERENCES: https://emanual.robotis.com/docs/en/platform/turtlebot3/slam/
+            https://www.youtube.com/watch?v=y54BWXInJDQ
