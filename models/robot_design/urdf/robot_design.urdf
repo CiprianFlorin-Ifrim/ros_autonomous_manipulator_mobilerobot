@@ -39,15 +39,19 @@
   
   <!-- position the back wheels along the z-axis and x-axis appropriately --> 
   <xacro:property name="wheel_back_zoff" value="${0.05/scale}"/>
-  <xacro:property name="wheel_back_xoff" value="${0.30/scale}"/>
+  <xacro:property name="wheel_back_xoff" value="${0.35/scale}"/>
   
-  <!-- position the middle wheels along the z-axis and x-axis appropriately --> 
-  <xacro:property name="wheel_middle_zoff" value="${0.05/scale}"/>
-  <xacro:property name="wheel_middle_xoff" value="${0/scale}"/>
+  <!-- position the middle wheels back along the z-axis and x-axis appropriately --> 
+  <xacro:property name="wheel_middle_back_zoff" value="${0.05/scale}"/>
+  <xacro:property name="wheel_middle_back_xoff" value="${0.115/scale}"/>
+  
+  <!-- position the middle wheels front along the z-axis and x-axis appropriately --> 
+  <xacro:property name="wheel_middle_front_zoff" value="${0.05/scale}"/>
+  <xacro:property name="wheel_middle_front_xoff" value="${-0.115/scale}"/>
   
   <!-- position the front wheels along the z-axis and x-axis appropriately --> 
   <xacro:property name="wheel_front_zoff" value="${0.05/scale}"/>
-  <xacro:property name="wheel_front_xoff" value="${-0.3/scale}"/>
+  <xacro:property name="wheel_front_xoff" value="${-0.35/scale}"/>
   
   <!-- cylinder radius -->
   <xacro:property name="cylinder_radius" value="${0.025/scale}"/>
@@ -107,15 +111,14 @@
       </geometry>
     </collision>
 
-    <xacro:box_inertia m="${6/scale}" w="${base_width}" d="${base_length}" h="${base_height}"/>
+    <xacro:box_inertia m="${2/scale}" w="${base_width}" d="${base_length}" h="${base_height}"/>
   </link>
 
-<!--################################ WHEELS ####################################-->      
-<!-- wheels back -->
+<!--############################## WHEELS BACK ##################################-->      
   <xacro:macro name="wheel_back" params="prefix x_reflect y_reflect">
     <gazebo reference="${prefix}_back_link">
- 	<mu1 value="1000.0"/>
- 	<mu2 value="1000.0"/>
+ 	<mu1 value="100.0"/>
+ 	<mu2 value="100.0"/>
  	<kp value="10000000.0" />
  	<kd value="1.0" />
  	<fdir1 value="1 0 0"/>
@@ -165,15 +168,121 @@
 
   <xacro:wheel_back prefix="drivewhl_l" x_reflect="-1" y_reflect="1" />
   <xacro:wheel_back prefix="drivewhl_r" x_reflect="-1" y_reflect="-1" />
+  
+  
+<!--########################### WHEELS MIDDLE BACK ###############################-->   
+  <xacro:macro name="wheel" params="prefix x_reflect y_reflect">
+    <gazebo reference="${prefix}_middle_back_link">
+ 	<mu1 value="100.0"/>
+ 	<mu2 value="100.0"/>
+ 	<kp value="10000000.0" />
+ 	<kd value="1.0" />
+ 	<fdir1 value="1 0 0"/>
+      <material>Gazebo/White</material>
+    </gazebo>
+    
+    <link name="${prefix}_middle_back_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+        <geometry>
+            <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+        </geometry>
+        <material name="White"/>
+      </visual>
+      
+<!-- collision data - wheel middle back -->               
+     <collision>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+        </geometry>
+      </collision>
+      
+      <xacro:cylinder_inertia m="0.5" r="${wheel_radius}" w="${wheel_width}"/> 
+    </link>
+
+    <joint name="${prefix}_middle_back_joint" type="continuous">
+      <parent link="base_link"/>
+      <child link="${prefix}_middle_back_link"/>
+      <origin xyz="${x_reflect*wheel_middle_back_xoff} ${y_reflect*(base_width/2+wheel_ygap)} ${-wheel_middle_back_zoff}" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+    </joint>
+    
+<!-- controller - wheels middle back -->
+    <transmission name="${prefix}_middle_back_link_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <actuator name="${prefix}_middle_back_link_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+      <joint name="${prefix}_middle_back_joint">
+        <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      </joint>
+    </transmission>
+  </xacro:macro>
+
+  <xacro:wheel prefix="drivewhl_l" x_reflect="-1" y_reflect="1" />
+  <xacro:wheel prefix="drivewhl_r" x_reflect="-1" y_reflect="-1" />
+  
+
+<!--######################### WHEELS MIDDLE FRONT ##############################-->   
+  <xacro:macro name="wheel" params="prefix x_reflect y_reflect">
+    <gazebo reference="${prefix}_middle_front_link">
+ 	<mu1 value="100.0"/>
+ 	<mu2 value="100.0"/>
+ 	<kp value="10000000.0" />
+ 	<kd value="1.0" />
+ 	<fdir1 value="1 0 0"/>
+      <material>Gazebo/White</material>
+    </gazebo>
+  
+    <link name="${prefix}_middle_front_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+        <geometry>
+            <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+        </geometry>
+        <material name="White"/>
+      </visual>
+      
+<!-- collision data - wheel middle front -->               
+     <collision>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+        </geometry>
+      </collision>
+      
+      <xacro:cylinder_inertia m="0.5" r="${wheel_radius}" w="${wheel_width}"/> 
+    </link>
+
+    <joint name="${prefix}_middle_front_joint" type="continuous">
+      <parent link="base_link"/>
+      <child link="${prefix}_middle_front_link"/>
+      <origin xyz="${x_reflect*wheel_middle_front_xoff} ${y_reflect*(base_width/2+wheel_ygap)} ${-wheel_middle_front_zoff}" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+    </joint>
+    
+<!-- controller - wheels middle front -->
+    <transmission name="${prefix}_middle_front_link_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <actuator name="${prefix}_middle_front_link_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+      <joint name="${prefix}_middle_front_joint">
+        <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      </joint>
+    </transmission>
+  </xacro:macro>
+
+  <xacro:wheel prefix="drivewhl_l" x_reflect="-1" y_reflect="1" />
+  <xacro:wheel prefix="drivewhl_r" x_reflect="-1" y_reflect="-1" />
 
 
-
-
-<!-- wheels front -->
+<!--############################ WHEELS FRONT #################################-->   
   <xacro:macro name="wheel_front" params="prefix x_reflect y_reflect">
     <gazebo reference="${prefix}_front_link">
- 	<mu1 value="1000.0"/>
- 	<mu2 value="1000.0"/>
+ 	<mu1 value="100.0"/>
+ 	<mu2 value="100.0"/>
  	<kp value="10000000.0" />
  	<kd value="1.0" />
  	<fdir1 value="1 0 0"/>
@@ -207,7 +316,6 @@
       <axis xyz="0 1 0"/>
     </joint>
     
-    
 <!-- controller - wheels front -->
     <transmission name="${prefix}_front_link_trans">
       <type>transmission_interface/SimpleTransmission</type>
@@ -223,6 +331,7 @@
 
   <xacro:wheel_front prefix="drivewhl_l" x_reflect="-1" y_reflect="1" />
   <xacro:wheel_front prefix="drivewhl_r" x_reflect="-1" y_reflect="-1" />
+  
   
 <!--############################## ARM ########################################-->
 <!-- manipulator arm - first joint -->  
@@ -933,7 +1042,7 @@
         <odometryTopic>odom</odometryTopic>
         <odometryFrame>odom</odometryFrame>
         <broadcastTF>true</broadcastTF>
-        <wheelAcceleration>1.0</wheelAcceleration>
+        <wheelAcceleration>1000.0</wheelAcceleration>
       </plugin>
   </gazebo>
 
@@ -950,7 +1059,6 @@
              <joint>right_gripper_joint</joint>
          </plugin>
     </gazebo>
-
 
 
 </robot>
