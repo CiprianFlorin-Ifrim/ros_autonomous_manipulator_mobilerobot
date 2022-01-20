@@ -5,8 +5,8 @@
   
   
     <!-- arguments -->
-  <arg name="cmd_vel_topic" default="/diff_drive_controller/cmd_vel" />
-  <arg name="odom_topic" default="/diff_drive_controller/odom" />
+  <arg name="cmd_vel_topic" default="/cmd_vel" />
+  <arg name="odom_topic" default="/odom" />
   <arg name="move_forward_only" default="false"/>
 
   <!-- move base node -->

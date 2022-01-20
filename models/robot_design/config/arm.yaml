@@ -1,9 +1,11 @@
 type: "position_controllers/JointGroupPositionController"
 joints:
  - first_joint_base
+ - second_joint_enclosure_joint
  - second_joint_base
  - third_joint_base
  - grabber_fixture_left_joint
  - grabber_fixture_right_joint
  - left_gripper_joint
  - right_gripper_joint
+ 

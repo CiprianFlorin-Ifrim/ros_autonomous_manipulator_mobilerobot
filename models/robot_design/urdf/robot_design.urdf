@@ -165,62 +165,9 @@
 
   <xacro:wheel_back prefix="drivewhl_l" x_reflect="-1" y_reflect="1" />
   <xacro:wheel_back prefix="drivewhl_r" x_reflect="-1" y_reflect="-1" />
-  
 
-<!-- wheels middle -->
-  <xacro:macro name="wheel_middle" params="prefix x_reflect y_reflect">
-    <gazebo reference="${prefix}_middle_link">
- 	<mu1 value="1000.0"/>
- 	<mu2 value="1000.0"/>
- 	<kp value="10000000.0" />
- 	<kd value="1.0" />
- 	<fdir1 value="1 0 0"/>
-      <material>Gazebo/White</material>
-    </gazebo>
-    
-    <link name="${prefix}_middle_link">
-      <visual>
-        <origin xyz="${0.0/scale} ${0.0/scale} ${0.0/scale}" rpy="${pi/2} 0 0"/>
-        <geometry>
-            <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
-        </geometry>
-        <material name="White"/>
-      </visual>
-      
-<!-- collision data - wheel middle -->               
-     <collision>
-        <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
-        <geometry>
-          <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
-        </geometry>
-      </collision>
-      
-    <xacro:cylinder_inertia m="${2/scale}" r="${wheel_radius}" w="${wheel_width}"/>    
-    </link>
 
-    <joint name="${prefix}_middle_joint" type="continuous">
-      <parent link="chassis"/>
-      <child link="${prefix}_middle_link"/>
-      <origin xyz="${x_reflect*wheel_middle_xoff} ${y_reflect*(base_width/2+wheel_ygap)} ${-wheel_middle_zoff}" rpy="0 0 0"/>
-      <axis xyz="0 1 0"/>
-    </joint>
-    
-<!-- controller - wheels middle -->
-    <transmission name="${prefix}_middle_link_trans">
-      <type>transmission_interface/SimpleTransmission</type>
-      <actuator name="${prefix}_middle_link_motor">
-        <mechanicalReduction>1</mechanicalReduction>
-      </actuator>
-      <joint name="${prefix}_middle_joint">
-        <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-      </joint>
-    </transmission>
-  
-  </xacro:macro>
 
-  <xacro:wheel_middle prefix="drivewhl_l" x_reflect="-1" y_reflect="1" />
-  <xacro:wheel_middle prefix="drivewhl_r" x_reflect="-1" y_reflect="-1" />
-  
 
 <!-- wheels front -->
   <xacro:macro name="wheel_front" params="prefix x_reflect y_reflect">
@@ -960,23 +907,50 @@
 
 
 <!--############################## GAZEBO ##################################-->
-<!-- gazebo control plugin -->  
-    <gazebo>
-      <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-        <robotNameSpace>/</robotNameSpace>
-        <odometryTopic>/diff_drive_controller/odom</odometryTopic>
-        <odometryFrame>odom</odometryFrame>
+<!-- ros control plugin -->
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/</robotNamespace>
+      <controlPeriod>0.001</controlPeriod>
+      <legacyModeNS>false</legacyModeNS>
+    </plugin>
+  </gazebo> 
+  
+<!-- skid drive controller plugin -->
+  <gazebo>
+      <plugin name="skid_steer_drive_controller" filename="libgazebo_ros_skid_steer_drive.so">
+        <updateRate>100.0</updateRate>
+        <robotNamespace>/</robotNamespace>
+        <leftFrontJoint>drivewhl_l_front_joint</leftFrontJoint>
+        <rightFrontJoint>drivewhl_r_front_joint</rightFrontJoint>
+        <leftRearJoint>drivewhl_l_back_joint</leftRearJoint>
+        <rightRearJoint>drivewhl_r_back_joint</rightRearJoint>
+        <wheelSeparation>${wheel_ygap+wheel_width}</wheelSeparation>
+        <wheelDiameter>${wheel_radius*2}</wheelDiameter>
+        <wheelTorque>50</wheelTorque>
+        <topicName>cmd_vel</topicName>
         <robotBaseFrame>base_link</robotBaseFrame>
+        <odometryTopic>odom</odometryTopic>
+        <odometryFrame>odom</odometryFrame>
+        <broadcastTF>true</broadcastTF>
+        <wheelAcceleration>1.0</wheelAcceleration>
       </plugin>
-    </gazebo>
+  </gazebo>
 
-
-
+<!-- gazebo joint state plugin --> 
     <gazebo>
          <plugin name="joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
-            <jointName>first_joint_base, second_joint_base, third_joint_base, grabber_fixture_left_joint, grabber_fixture_right_joint, left_gripper_joint, right_gripper_joint </jointName>
+             <joint>first_joint_base</joint>
+             <joint>second_joint_enclosure_joint</joint>
+             <joint>second_joint_base</joint>
+             <joint>third_joint_base</joint>
+             <joint>grabber_fixture_left_joint</joint>
+             <joint>grabber_fixture_right_joint</joint>
+             <joint>left_gripper_joint</joint>
+             <joint>right_gripper_joint</joint>
          </plugin>
     </gazebo>
+
 
 
 </robot>
