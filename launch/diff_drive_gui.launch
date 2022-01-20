@@ -1,7 +1,7 @@
 <launch>
   <arg name="rviz"          default="true" /> 
   <arg name="model"         default="$(find assessmentmobilerobots_2022)/models/robot_design/urdf/robot_design.urdf"/>
-  <arg name="rvizconfig"    default="$(find assessmentmobilerobots_2022)/parameters/teleop_rviz_config.rviz" />
+  <arg name="rvizconfig" default="$(find assessmentmobilerobots_2022)/rviz/robot_visualize_config.rviz" />
   <arg name="x_pos"         default="5.5"/>
   <arg name="y_pos"         default="-2.5"/>
   <arg name="z_pos"         default="0.0"/>

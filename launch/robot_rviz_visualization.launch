@@ -1,7 +1,7 @@
 <launch>
 
   <arg name="model" default="$(find assessmentmobilerobots_2022)/models/robot_design/urdf/robot_design.urdf"/>
-  <arg name="rvizconfig" default="$(find assessmentmobilerobots_2022)/parameters/robot_visualize_config.rviz" />
+  <arg name="rvizconfig" default="$(find assessmentmobilerobots_2022)/rviz/robot_visualize_config.rviz" />
   <arg name="gui" default="true" />
 
   <param name="robot_description" command="$(find xacro)/xacro $(arg model)" />
