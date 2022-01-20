@@ -1025,24 +1025,17 @@
          </plugin>
     </gazebo> 
   
-<!-- skid drive controller plugin -->
+<!-- omni steering controller plugin -->
+<!-- development note: because of problems with odometry caused by the diff_drive -->
+<!-- the omni_sterring controller is the only one working accurately with my 8-wheel robot -->
     <gazebo>
-         <plugin name="skid_steer_drive_controller" filename="libgazebo_ros_skid_steer_drive.so">
-             <updateRate>100.0</updateRate>
-             <robotNamespace>/</robotNamespace>
-             <leftFrontJoint>drivewhl_l_front_joint</leftFrontJoint>
-             <rightFrontJoint>drivewhl_r_front_joint</rightFrontJoint>
-             <leftRearJoint>drivewhl_l_back_joint</leftRearJoint>
-             <rightRearJoint>drivewhl_r_back_joint</rightRearJoint>
-             <wheelSeparation>${wheel_ygap+wheel_width}</wheelSeparation>
-             <wheelDiameter>${wheel_radius*2}</wheelDiameter>
-             <wheelTorque>50</wheelTorque>
-             <topicName>cmd_vel</topicName>
+         <plugin name="omni_steering" filename="libgazebo_ros_planar_move.so">
+             <publishTF>true</publishTF>
+             <commandTopic>cmd_vel</commandTopic>
              <robotBaseFrame>base_link</robotBaseFrame>
              <odometryTopic>odom</odometryTopic>
              <odometryFrame>odom</odometryFrame>
-             <broadcastTF>true</broadcastTF>
-             <wheelAcceleration>1000.0</wheelAcceleration>
+             <odometryRate>100.0</odometryRate>
          </plugin>
     </gazebo>
 
