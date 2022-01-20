@@ -1015,36 +1015,36 @@
     </joint>
 
 
-<!--############################## GAZEBO ##################################-->
+<!--########################## GAZEBO PLUGINS ###############################-->
 <!-- ros control plugin -->
-  <gazebo>
-    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-      <robotNamespace>/</robotNamespace>
-      <controlPeriod>0.001</controlPeriod>
-      <legacyModeNS>false</legacyModeNS>
-    </plugin>
-  </gazebo> 
+    <gazebo>
+         <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+             <robotNamespace>/</robotNamespace>
+             <controlPeriod>0.001</controlPeriod>
+             <legacyModeNS>false</legacyModeNS>
+         </plugin>
+    </gazebo> 
   
 <!-- skid drive controller plugin -->
-  <gazebo>
-      <plugin name="skid_steer_drive_controller" filename="libgazebo_ros_skid_steer_drive.so">
-        <updateRate>100.0</updateRate>
-        <robotNamespace>/</robotNamespace>
-        <leftFrontJoint>drivewhl_l_front_joint</leftFrontJoint>
-        <rightFrontJoint>drivewhl_r_front_joint</rightFrontJoint>
-        <leftRearJoint>drivewhl_l_back_joint</leftRearJoint>
-        <rightRearJoint>drivewhl_r_back_joint</rightRearJoint>
-        <wheelSeparation>${wheel_ygap+wheel_width}</wheelSeparation>
-        <wheelDiameter>${wheel_radius*2}</wheelDiameter>
-        <wheelTorque>50</wheelTorque>
-        <topicName>cmd_vel</topicName>
-        <robotBaseFrame>base_link</robotBaseFrame>
-        <odometryTopic>odom</odometryTopic>
-        <odometryFrame>odom</odometryFrame>
-        <broadcastTF>true</broadcastTF>
-        <wheelAcceleration>1000.0</wheelAcceleration>
-      </plugin>
-  </gazebo>
+    <gazebo>
+         <plugin name="skid_steer_drive_controller" filename="libgazebo_ros_skid_steer_drive.so">
+             <updateRate>100.0</updateRate>
+             <robotNamespace>/</robotNamespace>
+             <leftFrontJoint>drivewhl_l_front_joint</leftFrontJoint>
+             <rightFrontJoint>drivewhl_r_front_joint</rightFrontJoint>
+             <leftRearJoint>drivewhl_l_back_joint</leftRearJoint>
+             <rightRearJoint>drivewhl_r_back_joint</rightRearJoint>
+             <wheelSeparation>${wheel_ygap+wheel_width}</wheelSeparation>
+             <wheelDiameter>${wheel_radius*2}</wheelDiameter>
+             <wheelTorque>50</wheelTorque>
+             <topicName>cmd_vel</topicName>
+             <robotBaseFrame>base_link</robotBaseFrame>
+             <odometryTopic>odom</odometryTopic>
+             <odometryFrame>odom</odometryFrame>
+             <broadcastTF>true</broadcastTF>
+             <wheelAcceleration>1000.0</wheelAcceleration>
+         </plugin>
+    </gazebo>
 
 <!-- gazebo joint state plugin --> 
     <gazebo>
@@ -1059,6 +1059,5 @@
              <joint>right_gripper_joint</joint>
          </plugin>
     </gazebo>
-
 
 </robot>
