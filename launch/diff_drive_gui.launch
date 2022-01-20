@@ -57,3 +57,4 @@
   
   <node name="opencv_boxcheck" pkg="assessmentmobilerobots_2022" type="opencv_boxcheck" /> 
 </launch>
+

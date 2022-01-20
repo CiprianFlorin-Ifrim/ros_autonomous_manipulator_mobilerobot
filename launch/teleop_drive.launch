@@ -1,26 +1,59 @@
 <launch>
-  <arg name="model" default="$(find assessmentmobilerobots_2022)/models/robot_design/urdf/robot_design.urdf"/>
-  <arg name="rvizconfig" default="$(find assessmentmobilerobots_2022)/rviz/teleop_rviz_config.rviz" />
+  <arg name="rviz"          default="true" /> 
+  <arg name="model"         default="$(find assessmentmobilerobots_2022)/models/robot_design/urdf/robot_design.urdf"/>
+  <arg name="rvizconfig" default="$(find assessmentmobilerobots_2022)/rviz/robot_visualize_config.rviz" />
+  <arg name="x_pos"         default="5.5"/>
+  <arg name="y_pos"         default="-2.5"/>
+  <arg name="z_pos"         default="0.0"/>
 
-  <include file="$(find urdf_sim_tutorial)/launch/gazebo.launch">
-    <arg name="model" value="$(arg model)" />
+  <arg name="gui" default="true"/>
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find assessmentmobilerobots_2022)/worlds/assessment_with_boxes.world"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="$(arg gui)"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
   </include>
+  <node name="move" pkg="assessmentmobilerobots_2022" type="move_semi_random" />
 
-  <rosparam command="load"
-            file="$(find robot_design)/config/joints.yaml"
-            ns="joint_state_controller" />
-  <rosparam command="load"
-            file="$(find robot_design)/config/diffdrive.yaml"
-            ns="diff_drive_controller" />
+  <!-- spawn the XACRO robot in Gazebo -->  
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find assessmentmobilerobots_2022)/models/robot_design/urdf/robot_design.urdf" />
 
-  <!--load the controllers-->
-  <node name="rdif_control_spawner" pkg="controller_manager" type="spawner" respawn="true" output="screen"
-  	args="joint_state_controller diff_drive_controller"/> 
-
-  <!--convert joint states to TF transforms for rviz-->
-  <node name="state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen"/>
-
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf" 
+  args="-urdf -model robot_design -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -param robot_description
+	-J first_joint_base 0
+  	-J second_joint_base -0.5
+  	-J third_joint_base 0
+  	-J grabber_fixture_left_joint 0
+  	-J grabber_fixture_right_joint 0
+  	-J left_gripper_joint 0
+  	-J right_gripper_joint 0
+  	-J right_gripper_joint 0
+  	-unpause">
+  </node>
+  
+  <!-- load the joint controllers -->  
+  <rosparam command="load" file="$(find assessmentmobilerobots_2022)/models/robot_design/config/joints.yaml" ns="joint_state_controller" />
+  <rosparam command="load" file="$(find assessmentmobilerobots_2022)/models/robot_design/config/diffdrive.yaml" ns="diff_drive_controller" />
+  <rosparam command="load" file="$(find assessmentmobilerobots_2022)/models/robot_design/config/arm.yaml" ns="arm_controller" />
+  <!-- rosparam command="load" file="$(find assessmentmobilerobots_2022)/models/robot_design/config/gazebo_ros_control_params.yaml" /> -->
+           
+  <!-- spawn the controllers -->
+  <node name="rdif_control_spawner" pkg="controller_manager" type="spawner" respawn="true" output="screen" args="joint_state_controller diff_drive_controller"/> 
+  <node name="arm_controller_spawner" pkg="controller_manager" type="controller_manager" respawn="false" output="screen" args="spawn arm_controller" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+      <param name="use_sim_time" value="true"/>
+  </node> 
+  
+  <!-- run RVIZ -->
+  <group if="$(arg rviz)">
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+  </group>
+  
+  <node name="opencv_boxcheck" pkg="assessmentmobilerobots_2022" type="opencv_boxcheck" /> 
+  
+  <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop" >
+      <remap from="cmd_vel" to="/diff_drive_controller/cmd_vel"/>
+  </node>
 </launch>
-
-
-
