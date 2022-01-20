@@ -355,7 +355,41 @@
       <origin rpy="0 0 0" xyz="${-0.30/scale} ${0/scale} ${0.13/scale}"/>
     </joint> 
     
+
+<!-- manipulator arm - second joint enclosure --> 
+  <gazebo reference="second_joint_enclosure">
+    <material>Gazebo/White</material>
+  </gazebo>
   
+    <link name="second_joint_enclosure">
+      <visual>
+        <geometry>
+          <box size="${base_length/10} ${base_width/7} ${base_height*4}"/>
+        </geometry>
+         <material name="White"/>
+        <origin rpy="0 0 0 " xyz="${0/scale} ${0/scale} ${0/scale}"/>
+      </visual>
+      
+<!-- collision data - second joint enclosure -->
+     <collision>
+      <origin rpy="0 0 0" xyz="${0/scale} ${0/scale} ${0/scale}"/>
+       <geometry>
+         <box size="${base_length/10} ${base_width/7} ${base_height*4}"/>
+       </geometry>
+     </collision>
+
+     <xacro:default_inertial mass="${0.5/scale}"/>
+    </link>
+    
+    <joint name="second_joint_enclosure_joint" type="revolute">
+      <axis xyz="0 1 0"/>
+      <limit effort="1000.0" lower="-0.15" upper="0.15" velocity="0.5"/>
+      <parent link="first_joint"/>
+      <child link="second_joint_enclosure"/>
+      <origin rpy="0 0 0" xyz="${-0.4/scale} ${0/scale} ${0.3/scale}"/>
+    </joint> 
+    
+
 <!-- manipulator arm - second joint --> 
   <gazebo reference="second_joint">
     <material>Gazebo/White</material>
@@ -381,12 +415,12 @@
       <xacro:default_inertial mass="${0.5/scale}"/>
     </link>
     
-    <joint name="second_joint_base" type="revolute">
-      <axis xyz="0 1 0"/>
-      <limit effort="1000.0" lower="0.0" upper="4.2" velocity="0.5"/>
-      <parent link="first_joint"/>
+    <joint name="second_joint_base" type="prismatic">
+      <axis xyz="1 0 0"/>
+      <limit effort="1000.0" lower="0" upper="0.15" velocity="0.5"/>
+      <parent link="second_joint_enclosure"/>
       <child link="second_joint"/>
-      <origin rpy="0 -1.5708 0" xyz="${-0.4/scale} ${0/scale} ${0/scale}"/>
+      <origin rpy="0 -1.5708 0" xyz="${0.0/scale} ${0/scale} ${-0.10/scale}"/>
     </joint>
 
 
@@ -402,36 +436,17 @@
    </transmission>
    
 
-<!-- manipulator arm - second joint enclosure --> 
-  <gazebo reference="second_joint_enclosure">
-    <material>Gazebo/White</material>
-  </gazebo>
-  
-    <link name="second_joint_enclosure">
-      <visual>
-        <geometry>
-          <box size="${base_length/10} ${base_width/7} ${base_height/2}"/>
-        </geometry>
-         <material name="White"/>
-        <origin rpy="0 0 0 " xyz="${0/scale} ${0/scale} ${0/scale}"/>
-      </visual>
-      
-<!-- collision data - second joint enclosure -->
-     <collision>
-      <origin rpy="0 0 0" xyz="${0/scale} ${0/scale} ${0/scale}"/>
-       <geometry>
-         <box size="${base_length/10} ${base_width/7} ${base_height/2}"/>
-       </geometry>
-     </collision>
+<!-- controller - second joint -->
+   <transmission name="second_joint_enclosure">
+     <type>transmission_interface/SimpleTransmission</type>
+     <actuator name="second_joint_enclosuret">
+       <mechanicalReduction>1</mechanicalReduction>
+     </actuator>
+     <joint name="second_joint_enclosure_joint">
+	<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+     </joint>
+   </transmission>
 
-     <xacro:default_inertial mass="${0.5/scale}"/>
-    </link>
-    
-    <joint name="second_joint_enclosure_joint" type="fixed">
-      <parent link="first_joint"/>
-      <child link="second_joint_enclosure"/>
-      <origin rpy="0 0 0" xyz="${-0.4/scale} ${0/scale} ${0/scale}"/>
-    </joint> 
 
 <!-- manipulator arm - third joint --> 
   <gazebo reference="third_joint">
@@ -460,7 +475,7 @@
     
     <joint name="third_joint_base" type="revolute">
       <axis xyz="0 1 0"/>
-      <limit effort="1000.0" lower="-1.35" upper="1.35" velocity="0.5"/>
+      <limit effort="1000.0" lower="-2.5" upper="1.00" velocity="0.5"/>
       <parent link="second_joint"/>
       <child link="third_joint"/>
       <origin rpy="0 1.5708 0" xyz="${0.58/scale} ${0/scale} ${0/scale}"/>
@@ -670,7 +685,8 @@
 	<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
       </joint>
     </transmission>
-  
+
+<!-- manipulator arm - left gripper tip-->   
     <joint name="left_tip_joint" type="fixed">
       <parent link="left_gripper"/>
       <child link="left_tip"/>
@@ -732,7 +748,7 @@
       </joint>
     </transmission>
 
-
+<!-- manipulator arm - right gripper tip-->  
     <joint name="right_tip_joint" type="fixed">
       <parent link="right_gripper"/>
       <child link="right_tip"/>
@@ -760,37 +776,37 @@
 
 <!--############################### SENSORS ##################################-->  
 <!-- laser scanner plugin -->  
-<gazebo reference="sensor_laser">
-  <material>Gazebo/Cyan</material>
-   <sensor type="ray" name="head_hokuyo_sensor">
-      <visualize>false</visualize>
-      <update_rate>50</update_rate>
-      <ray>
-        <scan>
-          <horizontal>
-            <samples>720</samples>
-            <resolution>1</resolution>
-            <min_angle>-3.14159</min_angle>
-            <max_angle>3.14159</max_angle>
-          </horizontal>
-        </scan>
-        <range>
-          <min>0.10</min>
-          <max>15.0</max>
-          <resolution>0.01</resolution>
-        </range>
-        <noise>
-          <type>gaussian</type>
-          <mean>0.0</mean>
-          <stddev>0.01</stddev>
-        </noise>
-      </ray>
-      <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
-        <topicName>/scan</topicName>
-        <frameName>sensor_laser</frameName>
-      </plugin>
-    </sensor>
-</gazebo>
+    <gazebo reference="sensor_laser">
+      <material>Gazebo/Cyan</material>
+       <sensor type="ray" name="head_hokuyo_sensor">
+          <visualize>false</visualize>
+          <update_rate>50</update_rate>
+          <ray>
+	    <scan>
+	      <horizontal>
+	        <samples>720</samples>
+	        <resolution>1</resolution>
+	        <min_angle>-3.14159</min_angle>
+	        <max_angle>3.14159</max_angle>
+	      </horizontal>
+	    </scan>
+	    <range>
+	      <min>0.10</min>
+	      <max>15.0</max>
+	      <resolution>0.01</resolution>
+	    </range>
+	    <noise>
+	      <type>gaussian</type>
+	      <mean>0.0</mean>
+	      <stddev>0.01</stddev>
+	    </noise>
+          </ray>
+          <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
+	    <topicName>/scan</topicName>
+	    <frameName>sensor_laser</frameName>
+          </plugin>
+        </sensor>
+    </gazebo>
 
  <!-- laser scanner link -->     
     <link name="sensor_laser">
@@ -801,7 +817,8 @@
         </geometry>
         <material name="Cyan"/>
       </visual>
-
+      
+ <!-- laser scanner collision data-->   
       <collision>
         <origin xyz="${0/scale} ${0/scale} ${0/scale}" rpy="0 0 0"/>
         <geometry>
@@ -811,7 +828,8 @@
       
       <xacro:default_inertial mass="${0.1/scale}"/>        
     </link>
-
+    
+ <!-- laser scanner joint-->   
     <joint name="joint_sensor_laser" type="fixed">
       <origin rpy="0 0 0" xyz="${0/scale} ${0/scale} ${0.12/scale}"/>
       <parent link="chassis"/>
@@ -820,121 +838,126 @@
 
 
  <!-- IMU scanner plugin --> 
-  <gazebo reference="sensor_imu">
-    <gravity>true</gravity>
-    <sensor name="imu_sensor" type="imu">
-      <always_on>true</always_on>
-      <update_rate>100</update_rate>
-      <visualize>true</visualize>
-      <topic>__default_topic__</topic>
-      <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
-        <topicName>imu_data</topicName>
-        <bodyName>sensor_imu</bodyName>
-        <updateRateHZ>10.0</updateRateHZ>
-        <gaussianNoise>0.0</gaussianNoise>
-        <xyzOffset>0 0 0</xyzOffset>
-        <rpyOffset>0 0 0</rpyOffset>
-        <frameName>sensor_imu</frameName>
-        <initialOrientationAsReference>false</initialOrientationAsReference>
-      </plugin>
-    </sensor>
-  </gazebo>
+    <gazebo reference="sensor_imu">
+      <gravity>true</gravity>
+      <sensor name="imu_sensor" type="imu">
+        <always_on>true</always_on>
+        <update_rate>100</update_rate>
+        <visualize>true</visualize>
+        <topic>__default_topic__</topic>
+        <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+          <topicName>imu_data</topicName>
+          <bodyName>sensor_imu</bodyName>
+          <updateRateHZ>10.0</updateRateHZ>
+          <gaussianNoise>0.0</gaussianNoise>
+          <xyzOffset>0 0 0</xyzOffset>
+          <rpyOffset>0 0 0</rpyOffset>
+          <frameName>sensor_imu</frameName>
+          <initialOrientationAsReference>false</initialOrientationAsReference>
+        </plugin>
+      </sensor>
+    </gazebo>
   
 <!-- IMU scanner link -->  
-  <link name="sensor_imu">
-    <inertial>
-      <mass value="${0.001/scale}"/>
-      <origin rpy="0 0 0" xyz="${0/scale} ${0/scale} ${0/scale}"/>
-      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.000001" iyz="0" izz="0.0001"/>
-    </inertial>
-    <visual>
-      <origin rpy="0 0 0" xyz="${0/scale} ${0/scale} ${0/scale}"/>
-      <geometry>
-        <box size="${base_length/10} ${base_width/10} ${base_height/10}"/>
-      </geometry>
-    </visual>
+    <link name="sensor_imu">
+      <inertial>
+        <mass value="${0.001/scale}"/>
+        <origin rpy="0 0 0" xyz="${0/scale} ${0/scale} ${0/scale}"/>
+        <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.000001" iyz="0" izz="0.0001"/>
+      </inertial>
+      <visual>
+        <origin rpy="0 0 0" xyz="${0/scale} ${0/scale} ${0/scale}"/>
+        <geometry>
+          <box size="${base_length/10} ${base_width/10} ${base_height/10}"/>
+        </geometry>
+      </visual>
+      
 <!-- IMU scanner collision data-->     
-    <collision>
-      <origin rpy="0 0 0" xyz="${0/scale} ${0/scale} ${0/scale}"/>
-      <geometry>
-        <box size="${base_length/10} ${base_width/10} ${base_height/10}"/>
-      </geometry>
-    </collision>
-  </link>
+      <collision>
+        <origin rpy="0 0 0" xyz="${0/scale} ${0/scale} ${0/scale}"/>
+        <geometry>
+          <box size="${base_length/10} ${base_width/10} ${base_height/10}"/>
+        </geometry>
+      </collision>
+    </link>
+    
+<!-- IMU scanner joint-->  
+    <joint name="imu_joint" type="fixed">
+      <axis xyz="1 0 0"/> <!-- 0 1 0 -->
+        <origin xyz="${0/scale} ${0/scale} ${-0.1/scale}"/>
+        <parent link="chassis"/>
+        <child link="sensor_imu"/>
+    </joint>
 
-  <joint name="imu_joint" type="fixed">
-    <axis xyz="1 0 0"/> <!-- 0 1 0 -->
-      <origin xyz="${0/scale} ${0/scale} ${-0.1/scale}"/>
+
+
+<!--gazebo camera plugin-->
+    <gazebo reference="camera">
+      <material>Gazebo/Cyan</material>
+      <sensor type="camera" name="camera">
+        <update_rate>30.0</update_rate>
+        <camera name="head">
+          <horizontal_fov>1.0</horizontal_fov>
+          <image>
+            <width>800</width>
+            <height>800</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.02</near>
+            <far>50</far>
+          </clip>
+          <noise>
+            <type>gaussian</type>
+            <!-- Noise is sampled independently per pixel on each frame.
+                 That pixel's noise value is added to each of its color
+                 channels, which at that point lie in the range [0,1]. -->
+            <mean>0.0</mean>
+            <stddev>0.007</stddev>
+          </noise>
+        </camera>
+        <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+          <alwaysOn>true</alwaysOn>
+          <updateRate>0.0</updateRate>
+          <cameraName>/camera</cameraName>
+          <imageTopicName>image_raw</imageTopicName>
+          <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+          <frameName>camera</frameName>
+          <hackBaseline>0.07</hackBaseline>
+          <distortionK1>0.0</distortionK1>
+          <distortionK2>0.0</distortionK2>
+          <distortionK3>0.0</distortionK3>
+          <distortionT1>0.0</distortionT1>
+          <distortionT2>0.0</distortionT2>
+        </plugin>
+      </sensor>
+    </gazebo>
+  
+<!--camera link-->
+    <link name="camera">
+      <visual>
+        <geometry>
+          <box size="${camera_size} ${camera_size} ${camera_size}"/>
+        </geometry>
+        <material name="Cyan"/>
+      </visual>
+      
+<!--camera collision data-->    
+      <collision>
+        <geometry>
+          <box size="${camera_size} ${camera_size} ${camera_size}"/>
+        </geometry>
+      </collision>
+      <xacro:default_inertial mass="0.02"/>
+    </link>
+
+<!--camera joint-->
+    <joint name="camera_joint" type="fixed">
+      <origin xyz="0.155 0 0" rpy="0 0 0"/>
       <parent link="chassis"/>
-      <child link="sensor_imu"/>
-  </joint>
+      <child link="camera"/>
+    </joint>
 
-
-
-  <!--Gazebo Camera Plugin-->
-   <gazebo reference="camera">
-    <material>Gazebo/Cyan</material>
-    <sensor type="camera" name="camera">
-      <update_rate>30.0</update_rate>
-      <camera name="head">
-        <horizontal_fov>1.0</horizontal_fov>
-        <image>
-          <width>800</width>
-          <height>800</height>
-          <format>R8G8B8</format>
-        </image>
-        <clip>
-          <near>0.02</near>
-          <far>50</far>
-        </clip>
-        <noise>
-          <type>gaussian</type>
-          <!-- Noise is sampled independently per pixel on each frame.
-               That pixel's noise value is added to each of its color
-               channels, which at that point lie in the range [0,1]. -->
-          <mean>0.0</mean>
-          <stddev>0.007</stddev>
-        </noise>
-      </camera>
-      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
-        <alwaysOn>true</alwaysOn>
-        <updateRate>0.0</updateRate>
-        <cameraName>/camera</cameraName>
-        <imageTopicName>image_raw</imageTopicName>
-        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
-        <frameName>camera</frameName>
-        <hackBaseline>0.07</hackBaseline>
-        <distortionK1>0.0</distortionK1>
-        <distortionK2>0.0</distortionK2>
-        <distortionK3>0.0</distortionK3>
-        <distortionT1>0.0</distortionT1>
-        <distortionT2>0.0</distortionT2>
-      </plugin>
-    </sensor>
-  </gazebo>
-  
-  
-    <!--Camera-->
-  <link name="camera">
-    <visual>
-      <geometry>
-        <box size="${camera_size} ${camera_size} ${camera_size}"/>
-      </geometry>
-      <material name="Cyan"/>
-    </visual>
-    <collision>
-      <geometry>
-        <box size="${camera_size} ${camera_size} ${camera_size}"/>
-      </geometry>
-    </collision>
-    <xacro:default_inertial mass="0.02"/>
-  </link>
-
-  <joint name="camera_joint" type="fixed">
-    <origin xyz="0.155 0 0" rpy="0 0 0"/>
-    <parent link="chassis"/>
-    <child link="camera"/>
-  </joint>
 
 <!--############################## GAZEBO ##################################-->
 <!-- gazebo control plugin -->  
@@ -949,11 +972,11 @@
 
 
 
-<gazebo>
-     <plugin name="joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
-        <jointName>first_joint_base, second_joint_base, third_joint_base, grabber_fixture_left_joint, grabber_fixture_right_joint, left_gripper_joint, right_gripper_joint </jointName>
-     </plugin>
-</gazebo>
+    <gazebo>
+         <plugin name="joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
+            <jointName>first_joint_base, second_joint_base, third_joint_base, grabber_fixture_left_joint, grabber_fixture_right_joint, left_gripper_joint, right_gripper_joint </jointName>
+         </plugin>
+    </gazebo>
 
 
 </robot>
