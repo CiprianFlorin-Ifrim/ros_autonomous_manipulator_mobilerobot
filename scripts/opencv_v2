@@ -7,6 +7,14 @@ import numpy as np
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 
+def put_text(frame, cnt, area, text):
+    x, y, w, h = cv2.boundingRect(cnt)
+    frame = cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+    cv2.putText(frame, text, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0))
+    area_str = str(area)
+    area_output = "Area: " + area_str
+    cv2.putText(frame, area_output, (x, y - 50), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0))
+
 class camera:
     def __init__(self):
         self.image_sub = rospy.Subscriber("/camera/image_raw", Image, self.callback)
@@ -38,13 +46,14 @@ class camera:
         for j, cnt in enumerate(contours):                              #go through all the contours
             area = cv2.contourArea(cnt)				                    #calculate area of the current contour
             if area > area_sensitivity:                                 #if area is higher than area_sensitivity (perfect value for my camera = 8000)
-                x, y, w, h = cv2.boundingRect(cnt)
-                frame = cv2.rectangle(frame, (x, y),(x + w, y + h), (0, 255, 0), 2)
+                   if area > 150000:
+                        put_text(frame, cnt, area, "Big Box Identified")
 
-                cv2.putText(frame, "Box Identified", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0))
-                area_str = str(area)
-                area_output = "Area: " + area_str
-                cv2.putText(frame, area_output, (x, y - 50), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0))
+                    elif area > 100000 and area < 150000:
+                        put_text(frame, cnt, area, "Medium Box Identified")
+
+                    elif area < 90000:
+                        put_text(frame, cnt, area, "Small Box Identified")
 
         # ---------------------------------------PROGRAM TERMINATION--------------------------------------------------
         cv2.imshow("Robot Camera View", frame)

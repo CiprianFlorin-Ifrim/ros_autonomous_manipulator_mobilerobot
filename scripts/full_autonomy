@@ -1,0 +1,177 @@
+#!/usr/bin/env python3 
+
+import rospy
+import cv2
+import numpy as np
+
+import actionlib
+from sensor_msgs.msg import Image
+from cv_bridge import CvBridge, CvBridgeError
+from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
+from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
+
+# arm positions | reference: robot base
+arm_low_position = [0.4, 0.4, 0.05, -2.1]
+arm_medium_position = [0.2, -0.4, 0.0, -1.6]
+arm_high_position = [-0.2, -0.4, 0.15, -1.3]
+
+# gripper extension positions
+gripper_default = [0.0, 0.0]
+gripper_open = [1.0, 1.0]
+gripper_closed = [-1.0, -1.0]
+
+# claw positions
+claw_small = [0.0, 0.0]
+claw_medium = [0.04, 0.04]
+claw_large = [0.08, 0.08]
+
+# joints list for each controller
+arm_joints = ['first_joint_base', 'second_joint_enclosure_joint', 'second_joint_base', 'third_joint_base']
+claw_joints = ['grabber_fixture_left_joint', 'grabber_fixture_right_joint']
+gripper_joints = ['left_gripper_joint', 'right_gripper_joint']
+
+# controller topic to publish on
+arm_controller = '/arm_controller/command'
+claw_controller = '/claw_controller/command'
+gripper_controller = '/gripper_controller/command'
+
+origin= [(0.0, 0.0, 0.0), (0.0, 0.0, 0.0, 1.0)]
+
+def goal_pose(pose):
+    goal_pose = MoveBaseGoal()
+    goal_pose.target_pose.header.frame_id = 'map'
+    goal_pose.target_pose.pose.position.x = pose[0][0]
+    goal_pose.target_pose.pose.position.y = pose[0][1]
+    goal_pose.target_pose.pose.position.z = pose[0][2]
+    goal_pose.target_pose.pose.orientation.x = pose[1][0]
+    goal_pose.target_pose.pose.orientation.y = pose[1][1]
+    goal_pose.target_pose.pose.orientation.z = pose[1][2]
+    goal_pose.target_pose.pose.orientation.w = pose[1][3]
+    return goal_pose
+
+
+# definitions that takes topic, joints and positions as input and perform forward kinematics
+def perform_trajectory(topic, joints, positions):
+    # rospy.init_node('arm_trajectory_publisher')
+    controller_name = topic
+    trajectory_publisher = rospy.Publisher(controller_name, JointTrajectory, queue_size=10)
+
+    goal_positions = positions
+    # rospy.sleep(1)
+
+    # creating a message to send Joint Trajectory type
+    arm_trajectory = JointTrajectory()
+    arm_trajectory.joint_names = joints
+    arm_trajectory.points.append(JointTrajectoryPoint())
+    arm_trajectory.points[0].positions = goal_positions
+    arm_trajectory.points[0].velocities = [0.0 for i in joints]
+    arm_trajectory.points[0].accelerations = [0.0 for i in joints]
+    arm_trajectory.points[0].time_from_start = rospy.Duration(1)
+    # rospy.sleep(1)
+    trajectory_publisher.publish(arm_trajectory)
+    # trajecotry will be executed while the node will complete execution
+    # task will be sent before that with time delays
+
+
+def put_text(frame, cnt, area, text):
+    x, y, w, h = cv2.boundingRect(cnt)
+    frame = cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+    cv2.putText(frame, text, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0))
+    area_str = str(area)
+    area_output = "Area: " + area_str
+    cv2.putText(frame, area_output, (x, y - 50), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0))
+
+def move_origin():
+    client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
+    client.wait_for_server()
+    while True:
+        goal = goal_pose(origin)
+        client.send_goal(goal)
+        client.wait_for_result()
+
+class camera:
+    def __init__(self):
+        self.image_sub = rospy.Subscriber("/camera/image_raw", Image, self.callback)
+
+    def callback(self, data):
+
+        bridge = CvBridge()
+        area_sensitivity = 80000  # area threshold to detect items
+
+        try:
+            frame = bridge.imgmsg_to_cv2(data, desired_encoding="bgr8")
+        except CvBridgeError as e:
+            rospy.logerr(e)
+
+        # -----------------------------------------------BOX COLOUR PROCESSING-----------------------------------------
+        hsvframe = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+
+        box_lower = np.array([10, 100, 50], np.uint8)  # set the lower HSV range for the GREEN colour
+        box_upper = np.array([20, 255, 255], np.uint8)
+        box_mask = cv2.inRange(hsvframe, box_lower, box_upper)
+
+        kernel = np.ones((5, 5),
+                         "uint8")  # create a kernel to be used for dilation in order to remove noise/holes from the frame
+        box_mask = cv2.dilate(box_mask, kernel)  # dilate the red mask and remove the noise by using the kernel
+        res_box = cv2.bitwise_and(frame, frame,
+                                  mask=box_mask)  # merge the frames based on the red mask pixel coordinates
+
+        # -----------------------------------------------CONTOURS PROCESSING-----------------------------------------
+        contours, hierarchy = cv2.findContours(box_mask, cv2.RETR_TREE,  # find the contours on the mask
+                                               cv2.CHAIN_APPROX_SIMPLE)
+        for j, cnt in enumerate(contours):  # go through all the contours
+            area = cv2.contourArea(cnt)  # calculate area of the current contour
+            if area > area_sensitivity:  # if area is higher than area_sensitivity (perfect value for my camera = 8000)
+                try:
+                    if area > 150000:
+                        put_text(frame, cnt, area, "Big Box Identified")
+                        trajectory_tasks = [[claw_controller, claw_joints, [-0.013, -0.013], 1],
+                                            [gripper_controller, gripper_joints, [-0.03, -0.03], 1],
+                                            [arm_controller, arm_joints, [0.4, 0.4, 0.05, -2.1], 20],
+                                            [claw_controller, claw_joints, [-0.015, -0.015], 1],
+                                            [arm_controller, arm_joints, [0.2, -0.4, 0.0, -1.6], 1]]
+                        for i, list_val in enumerate(trajectory_tasks):
+                            perform_trajectory(list_val[0], list_val[1], list_val[2])
+                            rospy.sleep(list_val[3])
+                            if i == 3: move_origin()
+
+                    elif area > 100000 and area < 150000:
+                        put_text(frame, cnt, area, "Medium Box Identified")
+                        # perform_trajectory(topic, joints, positions)
+
+                    elif area < 90000:
+                        put_text(frame, cnt, area, "Small Box Identified")
+                        trajectory_tasks = [[claw_controller, claw_joints, [-0.013, -0.013], 1],
+                                            [gripper_controller, gripper_joints, [-0.03, -0.03], 1],
+                                            [arm_controller, arm_joints, [0.4, 0.4, 0.05, -2.1], 20],
+                                            [claw_controller, claw_joints, [-0.015, -0.015], 1],
+                                            [arm_controller, arm_joints, [0.2, -0.4, 0.0, -1.6], 1]]
+                        for i, list_val in enumerate(trajectory_tasks):
+                            perform_trajectory(list_val[0], list_val[1], list_val[2])
+                            rospy.sleep(list_val[3])
+                            if i == 3: move_origin()
+                except (TypeError, IndexError, ZeroDivisionError, cv2.error) as e:
+                    continue
+
+# ---------------------------------------CV2 WINDOW DISPLAY--------------------------------------------------
+        cv2.imshow("Robot - Camera View", frame)
+        cv2.imshow("Camera - Colour Mask", res_box)
+        cv2.waitKey(15)
+
+
+# -------------------------------------------------------------------------------------------------------------------
+#  initializes a ROS node with the name camera_read . When anonymous = True a random number is assigned to the end of the node name
+# to make it unique. Since we just have one node with the same name, anonymous is set to False.
+def main():
+    camera()
+    try:
+        rospy.spin()
+    except KeyboardInterrupt:
+        rospy.loginfo("Shutting down")
+
+    cv2.destroyAllWindows()
+
+
+if __name__ == '__main__':
+    rospy.init_node('camera_read', anonymous=False)
+    main()

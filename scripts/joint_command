@@ -88,7 +88,15 @@ if __name__ == '__main__':
     #rospy.sleep(20)
     #arm("medium")
     
-    
+#or a more elegant way:
+    trajectory_tasks = [[claw_controller, claw_joints, [-0.013, -0.013], 1],
+		            [gripper_controller, gripper_joints, [-0.03, -0.03], 1],
+		            [arm_controller, arm_joints, [0.4, 0.4, 0.05, -2.1], 20],
+		            [claw_controller, claw_joints, [-0.015, -0.015], 1],
+		            [arm_controller, arm_joints, [0.2, -0.4, 0.0, -1.6], 1]]
+    for i, list_val in enumerate(trajectory_tasks):
+	    perform_trajectory(list_val[0], list_val[1], list_val[2])
+	    rospy.sleep(list_val[3])
     
 """
 Values:
