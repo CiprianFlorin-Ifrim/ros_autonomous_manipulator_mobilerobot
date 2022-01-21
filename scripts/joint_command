@@ -9,14 +9,14 @@ arm_medium_position = [0.2, -0.4, 0.0, -1.6]
 arm_high_position = [-0.2, -0.4, 0.15, -1.3]
 
 # gripper extension positions
-gripper_default = [-0.04, -0.04]
-gripper_open = [1.0, 1.0]
+gripper_default = [0.0, 0.0]
+gripper_open = [0.8, 0.8]
 gripper_closed = [-1.0, -1.0]
 
 # claw positions
-claw_small = [-0.016, -0.016]
-claw_medium = [0.04, 0.04]
-claw_large = [0.08, 0.08]
+claw_small = [-0.026, -0.026]
+claw_medium = [-0.013, -0.013]
+claw_large = [0.0, 0.0]
 
 # joints list for each controller
 arm_joints = ['first_joint_base', 'second_joint_enclosure_joint', 'second_joint_base', 'third_joint_base']
@@ -81,9 +81,34 @@ def gripper(value):
 
 if __name__ == '__main__':
     claw("medium")
-    gripper("open")
-    arm("low")
-    claw("small")
-    gripper("default")
-    rospy.sleep(30)
-    arm("medium")
+    #gripper("default")
+    #arm("low")
+    #claw("small")
+    #gripper("default")
+    #rospy.sleep(20)
+    #arm("medium")
+    
+    
+    
+"""
+Values:
+BIG CUBE:
+arm_low_position = [0.4, 0.4, 0.05, -2.1]
+gripper_default = [-0.03, -0.03]
+claw_small = [-0.015, -0.015]
+
+MEDIUM CUBE:
+arm_low_position = [0.4, 0.4, 0.05, -2.1]
+gripper_default = [0.0, 0.0]
+claw_medium = [-0.018, -0.018]
+
+SMALL CUBE:
+arm_high_position = [0.4, 0.4, 0.05, -2.1]
+gripper_default = [-0.03, -0.03]
+claw_small = [-0.026, -0.026]
+"""
+
+    
+    
+    
+    
