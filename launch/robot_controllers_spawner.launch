@@ -24,8 +24,7 @@
   </node>
   
   <!-- load the joint controllers -->  
-  <rosparam command="load" file="$(find assessmentmobilerobots_2022)/models/robot_design/config/joints.yaml" ns="joint_state_controller" />
-  <rosparam command="load" file="$(find assessmentmobilerobots_2022)/models/robot_design/config/arm.yaml" ns="arm_controller" />
+  <rosparam command="load" file="$(find assessmentmobilerobots_2022)/models/robot_design/config/arm.yaml"/>
   <rosparam command="load" file="$(find assessmentmobilerobots_2022)/models/robot_design/config/gazebo_ros_control_params.yaml" />
            
   <!-- spawn the controllers -->
@@ -33,10 +32,6 @@
       <param name="use_sim_time" value="true"/>
   </node> 
   
-  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
-    <param name="use_gui" value="false"/>
-  </node>
-  
-  <node name="arm_controller_spawner" pkg="controller_manager" type="controller_manager" respawn="false" output="screen" args="spawn arm_controller" />
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="joint_state_controller arm_controller claw_controller gripper_controller"/>
   
 </launch>

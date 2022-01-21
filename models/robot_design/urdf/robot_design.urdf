@@ -111,7 +111,7 @@
       </geometry>
     </collision>
 
-    <xacro:box_inertia m="${2/scale}" w="${base_width}" d="${base_length}" h="${base_height}"/>
+    <xacro:box_inertia m="${200/scale}" w="${base_width}" d="${base_length}" h="${base_height}"/>
   </link>
 
 <!--############################## WHEELS BACK ##################################-->      
@@ -1019,7 +1019,6 @@
 <!-- ros control plugin -->
     <gazebo>
          <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-             <robotNamespace>/</robotNamespace>
              <controlPeriod>0.001</controlPeriod>
              <legacyModeNS>false</legacyModeNS>
          </plugin>
