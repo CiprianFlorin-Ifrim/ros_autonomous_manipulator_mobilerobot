@@ -24,7 +24,10 @@ $ sudo apt-get install ros-noetic-cv-bridge
 $ sudo apt-get install ros-noetic-vision-opencv
 
 
-3) Launch any of the following to spawn the world(the empty or with boxes can be chosen from the launch file), the URDF robot, the specific RVIZ configuration and Gazebo (the Gazebo GUI can be enabled or disabled in the launch files):
+4) This step is not mandatory as it only affects the material colours in Gazebo. The file "gazebo.material" present under the model folder, should be copy and pasted in place of the system one.
+
+
+5) Launch any of the following to spawn the world(the empty or with boxes can be chosen from the launch file), the URDF robot, the specific RVIZ configuration and Gazebo (the Gazebo GUI can be enabled or disabled in the launch files):
 - To launch the Navigation Stack simply run: `roslaunch assessmentmobilerobots_2022 navigation_stack.launch`
     - For autonomy using the implement grid search algorith, use: `rosrun assessmentmobilerobots_2022 grid_search`
 - For teleoperation use: `roslaunch assessmentmobilerobots_2022 teleop_drive.launch`
