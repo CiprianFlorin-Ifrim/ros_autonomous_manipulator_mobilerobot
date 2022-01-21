@@ -111,14 +111,15 @@
       </geometry>
     </collision>
 
-    <xacro:box_inertia m="${2/scale}" w="${base_width}" d="${base_length}" h="${base_height}"/>
+    <xacro:box_inertia m="${5/scale}" w="${base_width}" d="${base_length}" h="${base_height}"/>
   </link>
 
-<!--############################## WHEELS BACK ##################################-->      
+<!--############################## WHEELS BACK ##################################-->  
+<!-- development note: if the wheel mass is smaller than 0.4, gazebo will crash -->    
   <xacro:macro name="wheel_back" params="prefix x_reflect y_reflect">
     <gazebo reference="${prefix}_back_link">
- 	<mu1 value="100.0"/>
- 	<mu2 value="100.0"/>
+ 	<mu1 value="1000.0"/>
+ 	<mu2 value="200.0"/>
  	<kp value="10000000.0" />
  	<kd value="1.0" />
  	<fdir1 value="1 0 0"/>
@@ -173,8 +174,8 @@
 <!--########################### WHEELS MIDDLE BACK ###############################-->   
   <xacro:macro name="wheel" params="prefix x_reflect y_reflect">
     <gazebo reference="${prefix}_middle_back_link">
- 	<mu1 value="100.0"/>
- 	<mu2 value="100.0"/>
+ 	<mu1 value="1000.0"/>
+ 	<mu2 value="200.0"/>
  	<kp value="10000000.0" />
  	<kd value="1.0" />
  	<fdir1 value="1 0 0"/>
@@ -198,7 +199,7 @@
         </geometry>
       </collision>
       
-      <xacro:cylinder_inertia m="0.5" r="${wheel_radius}" w="${wheel_width}"/> 
+      <xacro:cylinder_inertia m="${2/scale}" r="${wheel_radius}" w="${wheel_width}"/> 
     </link>
 
     <joint name="${prefix}_middle_back_joint" type="continuous">
@@ -227,8 +228,8 @@
 <!--######################### WHEELS MIDDLE FRONT ##############################-->   
   <xacro:macro name="wheel" params="prefix x_reflect y_reflect">
     <gazebo reference="${prefix}_middle_front_link">
- 	<mu1 value="100.0"/>
- 	<mu2 value="100.0"/>
+ 	<mu1 value="1000.0"/>
+ 	<mu2 value="200.0"/>
  	<kp value="10000000.0" />
  	<kd value="1.0" />
  	<fdir1 value="1 0 0"/>
@@ -252,7 +253,7 @@
         </geometry>
       </collision>
       
-      <xacro:cylinder_inertia m="0.5" r="${wheel_radius}" w="${wheel_width}"/> 
+      <xacro:cylinder_inertia m="${2/scale}" r="${wheel_radius}" w="${wheel_width}"/> 
     </link>
 
     <joint name="${prefix}_middle_front_joint" type="continuous">
@@ -281,8 +282,8 @@
 <!--############################ WHEELS FRONT #################################-->   
   <xacro:macro name="wheel_front" params="prefix x_reflect y_reflect">
     <gazebo reference="${prefix}_front_link">
- 	<mu1 value="100.0"/>
- 	<mu2 value="100.0"/>
+ 	<mu1 value="1000.0"/>
+ 	<mu2 value="200.0"/>
  	<kp value="10000000.0" />
  	<kd value="1.0" />
  	<fdir1 value="1 0 0"/>
@@ -361,7 +362,7 @@
     
     <joint name="first_joint_base" type="revolute">
       <axis xyz="0 1 0"/>
-      <limit effort="1000.0" lower="-0.7" upper="1.35" velocity="0.5"/>
+      <limit effort="5.0" lower="-0.7" upper="1.35" velocity="5.0"/>
       <parent link="chassis"/>
       <child link="first_joint"/>
       <origin rpy="0 1.5708 0" xyz="${-0.30/scale} ${0/scale} ${0.09/scale}"/>
@@ -439,7 +440,7 @@
     
     <joint name="second_joint_enclosure_joint" type="revolute">
       <axis xyz="0 1 0"/>
-      <limit effort="1000.0" lower="-0.15" upper="0.15" velocity="0.5"/>
+      <limit effort="5.0" lower="-0.15" upper="0.15" velocity="5.0"/>
       <parent link="first_joint"/>
       <child link="second_joint_enclosure"/>
       <origin rpy="0 0 0" xyz="${-0.4/scale} ${0/scale} ${0.3/scale}"/>
@@ -454,7 +455,7 @@
     <link name="second_joint">
       <visual>
         <geometry>
-          <cylinder length="${0.6/scale}" radius="${cylinder_radius}"/>
+          <cylinder length="${0.9/scale}" radius="${cylinder_radius}"/>
         </geometry>
          <material name="White"/>
         <origin rpy="0 1.5708 0 " xyz="${0.278/scale} ${0/scale} ${0/scale}"/>
@@ -473,10 +474,10 @@
     
     <joint name="second_joint_base" type="prismatic">
       <axis xyz="1 0 0"/>
-      <limit effort="1000.0" lower="0" upper="0.15" velocity="0.5"/>
+      <limit effort="5.0" lower="0.0" upper="${1.9/(scale*scale)}" velocity="5.0"/>
       <parent link="second_joint_enclosure"/>
       <child link="second_joint"/>
-      <origin rpy="0 -1.5708 0" xyz="${0.0/scale} ${0/scale} ${-0.10/scale}"/>
+      <origin rpy="0 -1.5708 0" xyz="${0.0/scale} ${0/scale} ${-0.13/scale}"/>
     </joint>
 
 
@@ -531,10 +532,10 @@
     
     <joint name="third_joint_base" type="revolute">
       <axis xyz="0 1 0"/>
-      <limit effort="1000.0" lower="-2.5" upper="1.00" velocity="0.5"/>
+      <limit effort="5.0" lower="-2.5" upper="1.00" velocity="5.0"/>
       <parent link="second_joint"/>
       <child link="third_joint"/>
-      <origin rpy="0 1.5708 0" xyz="${0.58/scale} ${0/scale} ${0/scale}"/>
+      <origin rpy="0 1.5708 0" xyz="${0.7/scale} ${0/scale} ${0/scale}"/>
     </joint> 
     
     
@@ -578,7 +579,7 @@
     <joint name="third_joint_enclosure_joint" type="fixed">
       <parent link="second_joint"/>
       <child link="third_joint_enclosure"/>
-      <origin rpy="0 0 0" xyz="${0.58/scale} ${0/scale} ${0/scale}"/>
+      <origin rpy="0 0 0" xyz="${0.7/scale} ${0/scale} ${0/scale}"/>
     </joint> 
 
     
@@ -590,7 +591,7 @@
     <link name="grabber_fixture">
       <visual>
         <geometry>
-          <box size="${base_length/1.8} ${base_width/8} ${base_height/3}"/>
+          <box size="${base_length/5.0} ${base_width/8} ${base_height/3}"/>
         </geometry>
          <material name="White"/>
         <origin rpy="0 0 1.5708 " xyz="${0/scale} ${0/scale} ${0/scale}"/>
@@ -600,7 +601,7 @@
      <collision>
       <origin rpy="0 0 1.5708 " xyz="${0/scale} ${0/scale} ${0/scale}"/>
        <geometry>
-         <box size="${base_length/1.8} ${base_width/8} ${base_height/3}"/>
+         <box size="${base_length/5.0} ${base_width/8} ${base_height/3}"/>
        </geometry>
      </collision>
 
@@ -622,7 +623,7 @@
     <link name="grabber_fixture_left">
       <visual>
         <geometry>
-          <cylinder length="${0.3/scale}" radius="${cylinder_radius}"/>
+          <cylinder length="${0.08/scale}" radius="${cylinder_radius}"/>
         </geometry>
          <material name="Grey"/>
         <origin rpy="-1.5708 0 0" xyz="${0/scale} ${0.13/scale} ${0/scale}"/>
@@ -632,7 +633,7 @@
      <collision>
        <origin rpy="-1.5708 0 0" xyz="${0/scale} ${0.13/scale} ${0/scale}"/>
         <geometry>
-          <cylinder length="${0.3/scale}" radius="${cylinder_radius}"/>
+          <cylinder length="${0.12/scale}" radius="${cylinder_radius}"/>
         </geometry>
       </collision>
       
@@ -641,7 +642,7 @@
     
     <joint name="grabber_fixture_left_joint" type="prismatic">
       <axis xyz="0 1 0"/>
-      <limit effort="1000.0" lower="0" upper="0.20" velocity="0.5"/>
+      <limit effort="5.0" lower="${-0.24/(scale*scale)}" upper="${0.1/(scale*scale)}" velocity="5.0"/>
       <parent link="grabber_fixture"/>
       <child link="grabber_fixture_left"/>
       <origin rpy="0 0 0" xyz="${0/scale} ${0/scale} ${0/scale}"/>
@@ -667,7 +668,7 @@
     <link name="grabber_fixture_right">
       <visual>
         <geometry>
-          <cylinder length="${0.3/scale}" radius="${cylinder_radius}"/>
+          <cylinder length="${0.08/scale}" radius="${cylinder_radius}"/>
         </geometry>
          <material name="Grey"/>
         <origin rpy="1.5708 0 0" xyz="${0/scale} ${-0.13/scale} ${0/scale}"/>
@@ -677,7 +678,7 @@
      <collision>
        <origin rpy="1.5708 0 0" xyz="${0/scale} ${-0.13/scale} ${0/scale}"/>
         <geometry>
-          <cylinder length="${0.3/scale}" radius="${cylinder_radius}"/>
+          <cylinder length="${0.15/scale}" radius="${cylinder_radius}"/>
         </geometry>
       </collision>
       
@@ -686,7 +687,7 @@
     
     <joint name="grabber_fixture_right_joint" type="prismatic">
       <axis xyz="0 -1 0"/>
-      <limit effort="1000.0" lower="0" upper="0.20" velocity="0.5"/>
+      <limit effort="5.0" lower="${-0.24/(scale*scale)}" upper="${0.1/(scale*scale)}" velocity="5.0"/>
       <parent link="grabber_fixture"/>
       <child link="grabber_fixture_right"/>
       <origin rpy="0 0 0" xyz="${0/scale} ${0/scale} ${0/scale}"/>
@@ -704,11 +705,20 @@
    </transmission>
        
     
-<!-- manipulator arm - left gripper -->   
+<!-- manipulator arm - left gripper -->  
+    <gazebo reference="left_gripper">
+ 	<mu1 value="1000.0"/>
+ 	<mu2 value="200.0"/>
+ 	<kp value="10000000.0" />
+ 	<kd value="1.0" />
+ 	<material>Gazebo/Cyan</material>
+    </gazebo>
+     
+    
     <joint name="left_gripper_joint" type="revolute">
       <axis xyz="0 0 1"/>
-      <limit effort="1000.0" lower="-0.548" upper="0.548" velocity="0.5"/>
-      <origin rpy="0 0 0" xyz="${0.02/scale} ${0.28/scale} ${0/scale}"/>
+      <limit effort="5.0" lower="-0.548" upper="0.548" velocity="5.0"/>
+      <origin rpy="0 0 0" xyz="${0.02/scale} ${0.18/scale} ${0/scale}"/>
       <parent link="grabber_fixture_left"/>
       <child link="left_gripper"/>
     </joint>
@@ -742,7 +752,30 @@
       </joint>
     </transmission>
 
-<!-- manipulator arm - left gripper tip-->   
+<!-- manipulator arm - left gripper tip--> 
+    <gazebo reference="left_tip">
+ 	<mu1 value="1000.0"/>
+ 	<mu2 value="200.0"/>
+ 	<kp value="10000000.0" />
+ 	<kd value="1.0" />
+ 	<maxContacts>25</maxContacts>
+	<material>Gazebo/Cyan</material>
+    </gazebo>
+
+<!-- gazebo grasping hack/tag - left gripper tip--> 
+<!-- values for contacts/attach steps have been optimised for least time required -->  
+   <gazebo>
+     <gripper name="left_tip">
+        <grasp_check>
+            <attach_steps>20</attach_steps>
+            <detach_steps>25</detach_steps>
+            <min_contact_count>1</min_contact_count>
+        </grasp_check>
+        <gripper_link>left_tip</gripper_link>
+        <palm_link>left_gripper</palm_link>
+      </gripper>
+    </gazebo>
+      
     <joint name="left_tip_joint" type="fixed">
       <parent link="left_gripper"/>
       <child link="left_tip"/>
@@ -767,10 +800,18 @@
     
     
 <!-- manipulator arm - right gripper -->  
+    <gazebo reference="right_gripper">
+ 	<mu1 value="1000.0"/>
+ 	<mu2 value="200.0"/>
+ 	<kp value="10000000.0" />
+ 	<kd value="1.0" />
+ 	<material>Gazebo/Cyan</material>
+    </gazebo>
+    
     <joint name="right_gripper_joint" type="revolute">
       <axis xyz="0 0 -1"/>
-      <limit effort="1000.0" lower="-0.548" upper="0.548" velocity="0.5"/>
-      <origin rpy="0 0 0" xyz="${0.02/scale} ${-0.28/scale} ${0/scale}"/>
+      <limit effort="5.0" lower="-0.548" upper="0.548" velocity="5.0"/>
+      <origin rpy="0 0 0" xyz="${0.02/scale} ${-0.18/scale} ${0/scale}"/>
       <parent link="grabber_fixture_right"/>
       <child link="right_gripper"/>
     </joint>
@@ -805,6 +846,29 @@
     </transmission>
 
 <!-- manipulator arm - right gripper tip-->  
+    <gazebo reference="right_tip">
+ 	<mu1 value="1000.0"/>
+ 	<mu2 value="200.0"/>
+ 	<kp value="10000000.0" />
+ 	<kd value="1.0" />
+ 	<maxContacts>25</maxContacts>
+ 	<material>Gazebo/Cyan</material>
+    </gazebo>
+    
+<!-- gazebo grasping hack/tag - left gripper tip-->  
+<!-- values for contacts/attach steps have been optimised for least time required -->   
+   <gazebo>
+     <gripper name="right_tip">
+        <grasp_check>
+            <attach_steps>20</attach_steps>
+            <detach_steps>25</detach_steps>
+            <min_contact_count>1</min_contact_count>
+        </grasp_check>
+        <gripper_link>right_tip</gripper_link>
+        <palm_link>right_gripper</palm_link>
+      </gripper>
+    </gazebo>
+
     <joint name="right_tip_joint" type="fixed">
       <parent link="right_gripper"/>
       <child link="right_tip"/>
@@ -826,8 +890,6 @@
       </collision>
       <xacro:default_inertial mass="${0.05/scale}"/>
     </link>
-
-
 
 
 <!--############################### SENSORS ##################################-->  
@@ -1019,7 +1081,6 @@
 <!-- ros control plugin -->
     <gazebo>
          <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-             <robotNamespace>/</robotNamespace>
              <controlPeriod>0.001</controlPeriod>
              <legacyModeNS>false</legacyModeNS>
          </plugin>

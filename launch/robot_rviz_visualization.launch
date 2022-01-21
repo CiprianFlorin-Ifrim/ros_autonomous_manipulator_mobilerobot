@@ -1,14 +1,23 @@
-<launch>
-
+<?xml version="1.0" encoding="UTF-8"?>
+<launch> 
   <arg name="model" default="$(find assessmentmobilerobots_2022)/models/robot_design/urdf/robot_design.urdf"/>
   <arg name="rvizconfig" default="$(find assessmentmobilerobots_2022)/rviz/robot_visualize_config.rviz" />
   <arg name="gui" default="true" />
 
   <param name="robot_description" command="$(find xacro)/xacro $(arg model)" />
+  <!-- load the joint controllers -->  
+  <rosparam command="load" file="$(find assessmentmobilerobots_2022)/models/robot_design/config/arm.yaml"/>
+  <rosparam command="load" file="$(find assessmentmobilerobots_2022)/models/robot_design/config/gazebo_ros_control_params.yaml" />
+           
+  <!-- spawn the controllers -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+      <param name="use_sim_time" value="true"/>
+  </node> 
+  
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="joint_state_controller arm_controller claw_controller gripper_controller"/>
 
   <node if="$(arg gui)" name="joint_state_publisher" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
   <node unless="$(arg gui)" name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
 
 </launch>

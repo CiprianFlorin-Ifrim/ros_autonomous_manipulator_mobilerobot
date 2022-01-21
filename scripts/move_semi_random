@@ -7,6 +7,7 @@ import tf
 
 from gazebo_msgs.msg import ModelState
 
+time.sleep(3)
 rospy.wait_for_service('gazebo/set_model_state')
 
 pub = rospy.Publisher('/gazebo/set_model_state', ModelState, queue_size=10)
