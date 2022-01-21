@@ -5,6 +5,7 @@
   <include file="$(find assessmentmobilerobots_2022)/launch/robot_controllers_spawner.launch"/> 
 
   <!-- open gazebo and load world -->
+  <arg name="gui" default="false"/>
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="world_name" value="$(find assessmentmobilerobots_2022)/worlds/assessment_with_boxes.world"/>
     <arg name="paused" value="false"/>

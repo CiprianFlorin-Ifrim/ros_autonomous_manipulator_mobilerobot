@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <launch>
+  <!-- spawn robot and load controllers -->
   <include file="$(find assessmentmobilerobots_2022)/launch/robot_controllers_spawner.launch"/> 
   
   <!-- load the gazebo world - enable/disable the GUI -->  
+  <arg name="gui" default="false"/>
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="world_name" value="$(find assessmentmobilerobots_2022)/worlds/assessment.world"/>
     <arg name="paused" value="true"/>

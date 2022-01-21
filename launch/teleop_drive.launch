@@ -2,7 +2,7 @@
 <launch>
   <!-- run launch file for the gazebo world and pass the argument of the gui enabled/disabled -->
   <!-- <include file="$(find assessmentmobilerobots_2022)/launch/assessment_world_empty_personalrobot.launch"/> -->
-  <include file="$(find assessmentmobilerobots_2022)/launch/assessment_world_boxes_personalrobot.launch"/>
+  <include file="$(find assessmentmobilerobots_2022)/launch/assessment_world_boxes_personalrobot.launch">
           <arg name="gui" value="false"/>
   </include>
   
