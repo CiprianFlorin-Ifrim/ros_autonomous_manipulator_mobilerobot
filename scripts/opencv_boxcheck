@@ -3,10 +3,61 @@
 import rospy
 import cv2
 import numpy as np
-import joint_command
 
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
+from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
+
+
+# arm positions | reference: robot base
+arm_low_position = [0.4, 0.4, 0.05, -2.1]
+arm_medium_position = [0.2, -0.4, 0.0, -1.6]
+arm_high_position = [-0.2, -0.4, 0.15, -1.3]
+
+# gripper extension positions
+gripper_default = [0.0, 0.0]
+gripper_open = [1.0, 1.0]
+gripper_closed = [-1.0, -1.0]
+
+# claw positions
+claw_small = [0.0, 0.0]
+claw_medium = [0.04, 0.04]
+claw_large = [0.08, 0.08]
+
+# joints list for each controller
+arm_joints = ['first_joint_base', 'second_joint_enclosure_joint', 'second_joint_base', 'third_joint_base']
+claw_joints = ['grabber_fixture_left_joint', 'grabber_fixture_right_joint']
+gripper_joints = ['left_gripper_joint', 'right_gripper_joint']
+
+# controller topic to publish on
+arm_controller = '/arm_controller/command'
+claw_controller = '/claw_controller/command'
+gripper_controller = '/gripper_controller/command'
+
+
+
+#definitions that takes topic, joints and positions as input and perform forward kinematics
+def perform_trajectory(topic, joints, positions):
+    #rospy.init_node('arm_trajectory_publisher')
+    controller_name = topic
+    trajectory_publihser = rospy.Publisher(controller_name, JointTrajectory, queue_size=10)
+                                
+    goal_positions = positions
+    #rospy.sleep(1)
+
+    #creating a message to send Joint Trajectory type
+    arm_trajectory = JointTrajectory()
+    arm_trajectory.joint_names = joints
+    arm_trajectory.points.append(JointTrajectoryPoint())
+    arm_trajectory.points[0].positions = goal_positions
+    arm_trajectory.points[0].velocities = [0.0 for i in joints]
+    arm_trajectory.points[0].accelerations = [0.0 for i in joints]
+    arm_trajectory.points[0].time_from_start = rospy.Duration(1)
+    #rospy.sleep(1)
+    trajectory_publihser.publish(arm_trajectory)
+    #trajecotry will be executed while the node will complete execution
+    #task will be sent before that with time delays
+    
 
 class camera:
     def __init__(self):
@@ -38,13 +89,14 @@ class camera:
                                                cv2.CHAIN_APPROX_SIMPLE)
         for j, cnt in enumerate(contours):  # go through all the contours
             area = cv2.contourArea(cnt)  # calculate area of the current contour
+            perform_trajectory(arm_controller, arm_joints, arm_medium_position)
             if area > area_sensitivity:  # if area is higher than area_sensitivity (perfect value for my camera = 8000)
                 x, y, w, h = cv2.boundingRect(cnt)
                 frame = cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
                 cv2.putText(frame, "Box Identified", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0))
 
-                joint_command.arm("high")
+                perform_trajectory(arm_controller, arm_joints, arm_low_position)
 
         # ---------------------------------------PROGRAM TERMINATION--------------------------------------------------
         cv2.imshow("Robot Camera View", frame)
