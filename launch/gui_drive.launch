@@ -26,7 +26,7 @@
   
   <!-- run computer vision python script for box detection and joint movement -->
   <group if="$(arg opencv)">
-    <node name="opencv_boxcheck" pkg="assessmentmobilerobots_2022" type="opencv_boxcheck" /> 
+    <node name="opencv_boxcheck" pkg="assessmentmobilerobots_2022" type="opencv_v2" /> 
   </group>
   
 </launch>

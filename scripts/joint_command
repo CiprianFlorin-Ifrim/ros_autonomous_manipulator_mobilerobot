@@ -80,7 +80,7 @@ def gripper(value):
 
 
 if __name__ == '__main__':
-    claw("medium")
+    #claw("medium")
     #gripper("default")
     #arm("low")
     #claw("small")
