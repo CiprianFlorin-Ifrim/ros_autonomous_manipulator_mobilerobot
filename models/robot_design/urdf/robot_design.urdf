@@ -111,14 +111,15 @@
       </geometry>
     </collision>
 
-    <xacro:box_inertia m="${200/scale}" w="${base_width}" d="${base_length}" h="${base_height}"/>
+    <xacro:box_inertia m="${5/scale}" w="${base_width}" d="${base_length}" h="${base_height}"/>
   </link>
 
-<!--############################## WHEELS BACK ##################################-->      
+<!--############################## WHEELS BACK ##################################-->  
+<!-- development note: if the wheel mass is smaller than 0.4, gazebo will crash -->    
   <xacro:macro name="wheel_back" params="prefix x_reflect y_reflect">
     <gazebo reference="${prefix}_back_link">
- 	<mu1 value="100.0"/>
- 	<mu2 value="100.0"/>
+ 	<mu1 value="1000.0"/>
+ 	<mu2 value="200.0"/>
  	<kp value="10000000.0" />
  	<kd value="1.0" />
  	<fdir1 value="1 0 0"/>
@@ -173,8 +174,8 @@
 <!--########################### WHEELS MIDDLE BACK ###############################-->   
   <xacro:macro name="wheel" params="prefix x_reflect y_reflect">
     <gazebo reference="${prefix}_middle_back_link">
- 	<mu1 value="100.0"/>
- 	<mu2 value="100.0"/>
+ 	<mu1 value="1000.0"/>
+ 	<mu2 value="200.0"/>
  	<kp value="10000000.0" />
  	<kd value="1.0" />
  	<fdir1 value="1 0 0"/>
@@ -198,7 +199,7 @@
         </geometry>
       </collision>
       
-      <xacro:cylinder_inertia m="0.5" r="${wheel_radius}" w="${wheel_width}"/> 
+      <xacro:cylinder_inertia m="${2/scale}" r="${wheel_radius}" w="${wheel_width}"/> 
     </link>
 
     <joint name="${prefix}_middle_back_joint" type="continuous">
@@ -227,8 +228,8 @@
 <!--######################### WHEELS MIDDLE FRONT ##############################-->   
   <xacro:macro name="wheel" params="prefix x_reflect y_reflect">
     <gazebo reference="${prefix}_middle_front_link">
- 	<mu1 value="100.0"/>
- 	<mu2 value="100.0"/>
+ 	<mu1 value="1000.0"/>
+ 	<mu2 value="200.0"/>
  	<kp value="10000000.0" />
  	<kd value="1.0" />
  	<fdir1 value="1 0 0"/>
@@ -252,7 +253,7 @@
         </geometry>
       </collision>
       
-      <xacro:cylinder_inertia m="0.5" r="${wheel_radius}" w="${wheel_width}"/> 
+      <xacro:cylinder_inertia m="${2/scale}" r="${wheel_radius}" w="${wheel_width}"/> 
     </link>
 
     <joint name="${prefix}_middle_front_joint" type="continuous">
@@ -281,8 +282,8 @@
 <!--############################ WHEELS FRONT #################################-->   
   <xacro:macro name="wheel_front" params="prefix x_reflect y_reflect">
     <gazebo reference="${prefix}_front_link">
- 	<mu1 value="100.0"/>
- 	<mu2 value="100.0"/>
+ 	<mu1 value="1000.0"/>
+ 	<mu2 value="200.0"/>
  	<kp value="10000000.0" />
  	<kd value="1.0" />
  	<fdir1 value="1 0 0"/>
@@ -361,7 +362,7 @@
     
     <joint name="first_joint_base" type="revolute">
       <axis xyz="0 1 0"/>
-      <limit effort="1000.0" lower="-0.7" upper="1.35" velocity="0.5"/>
+      <limit effort="5.0" lower="-0.7" upper="1.35" velocity="5.0"/>
       <parent link="chassis"/>
       <child link="first_joint"/>
       <origin rpy="0 1.5708 0" xyz="${-0.30/scale} ${0/scale} ${0.09/scale}"/>
@@ -439,7 +440,7 @@
     
     <joint name="second_joint_enclosure_joint" type="revolute">
       <axis xyz="0 1 0"/>
-      <limit effort="1000.0" lower="-0.15" upper="0.15" velocity="0.5"/>
+      <limit effort="5.0" lower="-0.15" upper="0.15" velocity="5.0"/>
       <parent link="first_joint"/>
       <child link="second_joint_enclosure"/>
       <origin rpy="0 0 0" xyz="${-0.4/scale} ${0/scale} ${0.3/scale}"/>
@@ -473,7 +474,7 @@
     
     <joint name="second_joint_base" type="prismatic">
       <axis xyz="1 0 0"/>
-      <limit effort="1000.0" lower="0" upper="0.15" velocity="0.5"/>
+      <limit effort="5.0" lower="0" upper="0.15" velocity="5.0"/>
       <parent link="second_joint_enclosure"/>
       <child link="second_joint"/>
       <origin rpy="0 -1.5708 0" xyz="${0.0/scale} ${0/scale} ${-0.10/scale}"/>
@@ -531,7 +532,7 @@
     
     <joint name="third_joint_base" type="revolute">
       <axis xyz="0 1 0"/>
-      <limit effort="1000.0" lower="-2.5" upper="1.00" velocity="0.5"/>
+      <limit effort="5.0" lower="-2.5" upper="1.00" velocity="5.0"/>
       <parent link="second_joint"/>
       <child link="third_joint"/>
       <origin rpy="0 1.5708 0" xyz="${0.58/scale} ${0/scale} ${0/scale}"/>
@@ -641,7 +642,7 @@
     
     <joint name="grabber_fixture_left_joint" type="prismatic">
       <axis xyz="0 1 0"/>
-      <limit effort="1000.0" lower="0" upper="0.20" velocity="0.5"/>
+      <limit effort="5.0" lower="0" upper="0.20" velocity="5.0"/>
       <parent link="grabber_fixture"/>
       <child link="grabber_fixture_left"/>
       <origin rpy="0 0 0" xyz="${0/scale} ${0/scale} ${0/scale}"/>
@@ -686,7 +687,7 @@
     
     <joint name="grabber_fixture_right_joint" type="prismatic">
       <axis xyz="0 -1 0"/>
-      <limit effort="1000.0" lower="0" upper="0.20" velocity="0.5"/>
+      <limit effort="5.0" lower="0" upper="0.20" velocity="5.0"/>
       <parent link="grabber_fixture"/>
       <child link="grabber_fixture_right"/>
       <origin rpy="0 0 0" xyz="${0/scale} ${0/scale} ${0/scale}"/>
@@ -707,7 +708,7 @@
 <!-- manipulator arm - left gripper -->   
     <joint name="left_gripper_joint" type="revolute">
       <axis xyz="0 0 1"/>
-      <limit effort="1000.0" lower="-0.548" upper="0.548" velocity="0.5"/>
+      <limit effort="5.0" lower="-0.548" upper="0.548" velocity="5.0"/>
       <origin rpy="0 0 0" xyz="${0.02/scale} ${0.28/scale} ${0/scale}"/>
       <parent link="grabber_fixture_left"/>
       <child link="left_gripper"/>
@@ -769,7 +770,7 @@
 <!-- manipulator arm - right gripper -->  
     <joint name="right_gripper_joint" type="revolute">
       <axis xyz="0 0 -1"/>
-      <limit effort="1000.0" lower="-0.548" upper="0.548" velocity="0.5"/>
+      <limit effort="5.0" lower="-0.548" upper="0.548" velocity="5.0"/>
       <origin rpy="0 0 0" xyz="${0.02/scale} ${-0.28/scale} ${0/scale}"/>
       <parent link="grabber_fixture_right"/>
       <child link="right_gripper"/>
@@ -826,8 +827,6 @@
       </collision>
       <xacro:default_inertial mass="${0.05/scale}"/>
     </link>
-
-
 
 
 <!--############################### SENSORS ##################################-->  

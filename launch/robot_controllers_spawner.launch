@@ -11,16 +11,7 @@
   <param name="robot_description" command="$(find xacro)/xacro --inorder $(find assessmentmobilerobots_2022)/models/robot_design/urdf/robot_design.urdf" />
 
   <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf" 
-  args="-urdf -model robot_design -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -param robot_description
-	-J first_joint_base 0
-  	-J second_joint_base -0.5
-  	-J third_joint_base 0
-  	-J grabber_fixture_left_joint 0
-  	-J grabber_fixture_right_joint 0
-  	-J left_gripper_joint 0
-  	-J right_gripper_joint 0
-  	-J right_gripper_joint 0
-  	-unpause">
+  args="-urdf -model robot_design -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -param robot_description" >
   </node>
   
   <!-- load the joint controllers -->  

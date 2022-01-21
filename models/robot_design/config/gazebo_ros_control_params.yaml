@@ -9,12 +9,13 @@ gazebo_ros_control/pid_gains:
   drivewhl_r_middle_front_joint: {p: 0.30, i: 100.0, d: 0.00001} 
   drivewhl_l_front_joint: {p: 0.30, i: 100.0, d: 0.00001}
   drivewhl_r_front_joint: {p: 0.30, i: 100.0, d: 0.00001}
-  first_joint_base: {p: 1000.0, i: 100.0, d: 10.0}
-  second_joint_enclosure_joint: {p: 100.0, i: 100.0, d: 10.0}
-  second_joint_base: {p: 1000.0, i: 100.0, d: 10.0}
-  third_joint_base: {p: 1000.0, i: 100.0, d: 10.0}
-  grabber_fixture_left_joint: {p: 1000.0, i: 100.0, d: 10.0}
-  grabber_fixture_right_joint: {p: 1000.0, i: 100.0, d: 10.0}
-  left_gripper_joint: {p: 1000.0, i: 100.0, d: 10.0}
-  right_gripper_joint: {p: 1000.0, i: 100.0, d: 10.0}
-
+ 
+#high proportional gain for the arm joints for a fast movement to goal with joint_trajectory_controller
+#  first_joint_base: {p: 100000, i: 0.0, d: 0.00001}
+#  second_joint_enclosure_joint: {p: 100000, i: 0.0, d: 0.00001}
+#  second_joint_base: {p: 100000, i: 0.0, d: 0.00001}
+#  third_joint_base: {p: 100000, i: 0.0, d: 0.00001}
+#  grabber_fixture_left_joint: {p: 100000, i: 0.0, d: 0.00001}
+#  grabber_fixture_right_joint: {p: 100000, i: 0.0, d: 0.00001}
+#  left_gripper_joint: {p: 100000, i: 0.0, d: 0.00001}
+#  right_gripper_joint: {p: 100000, i: 0.0, d: 0.00001}

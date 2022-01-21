@@ -12,7 +12,8 @@ arm_controller:
     
     constraints:
       goal_time: 0.3
-      first_joint_base: 0.05
+      stopped_velocity_tolerance: 0.05
+      first_joint_base: {trajectory: 0.1, goal: 0.1}
       grabber_fixture_left_joint: {trajectory: 0.1, goal: 0.1}
       second_joint_enclosure_joint: {trajectory: 0.1, goal: 0.1}
       second_joint_base: {trajectory: 0.1, goal: 0.1}
