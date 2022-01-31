@@ -26,12 +26,12 @@ $ sudo apt-get install ros-noetic-vision-opencv
 
 
 5) Launch any of the following to spawn the world(the empty or with boxes can be chosen from the launch file), the URDF robot, the specific RVIZ configuration and Gazebo (the Gazebo GUI can be enabled or disabled in the launch files):
-- To launch the Navigation Stack simply run: `roslaunch assessmentmobilerobots_2022 navigation_stack.launch`
-    - For autonomy using the implement grid search algorith, use: `rosrun assessmentmobilerobots_2022 grid_search`
-- For teleoperation use: `roslaunch assessmentmobilerobots_2022 teleop_drive.launch`
-- For GUI control use: `roslaunch assessmentmobilerobots_2022 gui_drive.launch`
+- To launch the Navigation Stack simply run: `roslaunch ros_autonomous_manipulator_mobilerobot navigation_stack.launch`
+    - For autonomy using the implement grid search algorith, use: `rosrun ros_autonomous_manipulator_mobilerobot grid_search`
+- For teleoperation use: `roslaunch ros_autonomous_manipulator_mobilerobot teleop_drive.launch`
+- For GUI control use: `roslaunch ros_autonomous_manipulator_mobilerobot gui_drive.launch`
     - To control the manipulator arm which uses a joint_trajectory_controller. Simply use: "rqt" and then select the controller, and then which part of the manipulator arm you'd like to control between "arm_controller", "claw_controller" and "gripper_controller". After giving a point with the sliders, the trajectory_controller will calculate the path.
-    - Separately there is a python script that will send a preset position to all joints. Run `rosrun assessmentmobilerobots_2022 joint_command`. The file needs to be edited if the position needs to be changed.
+    - Separately there is a python script that will send a preset position to all joints. Run `rosrun ros_autonomous_manipulator_mobilerobot joint_command`. The file needs to be edited if the position needs to be changed.
 - There is another file for full autonomy called "full_autonomy". It is just a work-in-progress. The idea behind it was to have the grid search running with the robot patrolling the map, and then stop the computer vision module when the area of the cube reaches a certain value, then send cmd_vel twist messages to move the robot a bit closer to the box, then run the python script that does the kinematics for the manipulator arm, which would complete a sequence of movements and pick up a box. Once the boxed has been picked up simply send a navigation goal for home. After the system sends a "goal reached", remove the waypoints that have been completed by remembering the index in the list of lists, and then continue with the grid search until the map is completed and all cubes have been brought to the origin. 
 In order to use the manipulator accordingly, the computer vision would be used to detect the box, calculate the center of the box countour and the center of the camera frame, and then measuring the distance between the 2 points, which would tell me if the box is on the ground, at a medium level, or high, for example the box on the staircase. Furthermore, to enable the grabber to pick up the box at any angle, I would use the HoughLines method, to find any line and parallel line in the masked frame, and from there project all lines on a 2d graph to understand the distance between 3 parallel lines (2 edges, and the edge/line in the center if the box is rotated towards the robot), which would give me the theta representing the rotation of the cube. This would then be transfered and translated to claw/gripper joint positions.
 
