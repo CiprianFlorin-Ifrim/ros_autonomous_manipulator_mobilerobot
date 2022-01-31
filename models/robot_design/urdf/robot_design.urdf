@@ -727,14 +727,14 @@
       <visual>
         <origin rpy="0 0 0" xyz="${0/scale} ${0/scale} ${0/scale}"/>
         <geometry>
-          <mesh filename="package://assessmentmobilerobots_2022/models/robot_design/meshes/l_finger.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
+          <mesh filename="package://ros_autonomous_manipulator_mobilerobot/models/robot_design/meshes/l_finger.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
         </geometry>
       </visual>
       
 <!-- collision data - left gripper -->     
       <collision>
         <geometry>
-          <mesh filename="package://assessmentmobilerobots_2022/models/robot_design/meshes/l_finger.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
+          <mesh filename="package://ros_autonomous_manipulator_mobilerobot/models/robot_design/meshes/l_finger.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
         </geometry>
          <origin rpy="0 0 0" xyz="${0/scale} ${0/scale} ${0/scale}"/>
       </collision>
@@ -785,13 +785,13 @@
       <visual>  
         <origin rpy="0 0 0" xyz="${0.09137/scale} ${0.00495/scale} ${0/scale}"/>
         <geometry>
-          <mesh filename="package://assessmentmobilerobots_2022/models/robot_design/meshes/l_finger_tip.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
+          <mesh filename="package://ros_autonomous_manipulator_mobilerobot/models/robot_design/meshes/l_finger_tip.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
         </geometry>
       </visual>
       
       <collision>
         <geometry>
-          <mesh filename="package://assessmentmobilerobots_2022/models/robot_design/meshes/l_finger_tip.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
+          <mesh filename="package://ros_autonomous_manipulator_mobilerobot/models/robot_design/meshes/l_finger_tip.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
         </geometry>
          <origin rpy="0 0 0" xyz="${0.09137/scale} ${0.00495/scale} ${0/scale}"/>
       </collision>
@@ -820,14 +820,14 @@
       <visual>
         <origin rpy="-3.1415 0 0" xyz="${0/scale} ${0/scale} ${0/scale}"/>
         <geometry>
-          <mesh filename="package://assessmentmobilerobots_2022/models/robot_design/meshes/l_finger.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
+          <mesh filename="package://ros_autonomous_manipulator_mobilerobot/models/robot_design/meshes/l_finger.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
         </geometry>
       </visual>
       
 <!-- collision data - right gripper -->     
       <collision>
         <geometry>
-          <mesh filename="package://assessmentmobilerobots_2022/models/robot_design/meshes/l_finger.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
+          <mesh filename="package://ros_autonomous_manipulator_mobilerobot/models/robot_design/meshes/l_finger.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
         </geometry>
          <origin rpy="-3.1415 0 0" xyz="${0/scale} ${0/scale} ${0/scale}"/>
       </collision>
@@ -878,13 +878,13 @@
       <visual>
         <origin rpy="-3.1415 0 0" xyz="${0.09137/scale} ${0.00495/scale} ${0/scale}"/>
         <geometry>
-          <mesh filename="package://assessmentmobilerobots_2022/models/robot_design/meshes/l_finger_tip.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
+          <mesh filename="package://ros_autonomous_manipulator_mobilerobot/models/robot_design/meshes/l_finger_tip.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
         </geometry>
       </visual>
       
       <collision>
         <geometry>
-          <mesh filename="package://assessmentmobilerobots_2022/models/robot_design/meshes/l_finger_tip.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
+          <mesh filename="package://ros_autonomous_manipulator_mobilerobot/models/robot_design/meshes/l_finger_tip.dae" scale="${1/scale} ${1/scale} ${1/scale}"/>
         </geometry>
          <origin rpy="-3.1415 0 0" xyz="${0.09137/scale} ${0.00495/scale} ${0/scale}"/>
       </collision>

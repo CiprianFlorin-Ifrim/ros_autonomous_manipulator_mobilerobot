@@ -2,8 +2,8 @@
 
 <launch>	
   <!-- run launch file for the gazebo world and pass the argument of the gui enabled/disabled -->
-  <!-- <include file="$(find assessmentmobilerobots_2022)/launch/assessment_world_empty_personalrobot.launch"> -->
-  <include file="$(find assessmentmobilerobots_2022)/launch/assessment_world_boxes_personalrobot.launch"> 
+  <!-- <include file="$(find os_autonomous_manipulator_mobilerobot)/launch/assessment_world_empty_personalrobot.launch"> -->
+  <include file="$(find os_autonomous_manipulator_mobilerobot)/launch/assessment_world_boxes_personalrobot.launch"> 
         <arg name="gui" value="false"/>
   </include>
   
@@ -11,8 +11,8 @@
   <!-- arguments -->
   <arg name="rviz"           default="true" /> 
   <arg name="opencv"         default="true" />	
-  <arg name="rvizconfig"     default="$(find assessmentmobilerobots_2022)/rviz/navigation.rviz" />
-  <arg name="map_file"       default="$(find assessmentmobilerobots_2022)/map/map_2_good/map.yaml"/> 
+  <arg name="rvizconfig"     default="$(find os_autonomous_manipulator_mobilerobot)/rviz/navigation.rviz" />
+  <arg name="map_file"       default="$(find os_autonomous_manipulator_mobilerobot)/map/map_2_good/map.yaml"/> 
   <arg name="initial_pose_x" default="0.0"/>
   <arg name="initial_pose_y" default="0.0"/>
   <arg name="initial_pose_a" default="0.0"/>
@@ -50,12 +50,12 @@
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
     <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
     <param name="base_global_planner" value="navfn/NavfnROS"/>
-    <rosparam file="$(find assessmentmobilerobots_2022)/parameters/costmap_common_params.yaml" command="load" ns="global_costmap" />
-    <rosparam file="$(find assessmentmobilerobots_2022)/parameters/costmap_common_params.yaml" command="load" ns="local_costmap" />
-    <rosparam file="$(find assessmentmobilerobots_2022)/parameters/local_costmap_params.yaml" command="load" />
-    <rosparam file="$(find assessmentmobilerobots_2022)/parameters/global_costmap_params.yaml" command="load" />
-    <rosparam file="$(find assessmentmobilerobots_2022)/parameters/move_base_params.yaml" command="load" />
-    <rosparam file="$(find assessmentmobilerobots_2022)/parameters/dwa_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find os_autonomous_manipulator_mobilerobot)/parameters/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find os_autonomous_manipulator_mobilerobot)/parameters/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find os_autonomous_manipulator_mobilerobot)/parameters/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find os_autonomous_manipulator_mobilerobot)/parameters/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find os_autonomous_manipulator_mobilerobot)/parameters/move_base_params.yaml" command="load" />
+    <rosparam file="$(find os_autonomous_manipulator_mobilerobot)/parameters/dwa_local_planner_params.yaml" command="load" />
     <remap from="cmd_vel" to="$(arg cmd_vel_topic)"/>
     <remap from="odom" to="$(arg odom_topic)"/>
     <param name="DWAPlannerROS/min_vel_x" value="0.0" if="$(arg move_forward_only)" />
@@ -70,7 +70,7 @@
 
   <!-- run computer vision python script for box detection and joint movement -->
   <group if="$(arg opencv)">
-    <node name="opencv_boxcheck" pkg="assessmentmobilerobots_2022" type="opencv_boxcheck" /> 
+    <node name="opencv_boxcheck" pkg="os_autonomous_manipulator_mobilerobot" type="opencv_boxcheck" /> 
   </group>
   
 </launch>

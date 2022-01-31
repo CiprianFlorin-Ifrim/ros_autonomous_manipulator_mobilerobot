@@ -2,12 +2,12 @@
 
 <launch>
   <!-- spawn robot and load controllers -->
-  <include file="$(find assessmentmobilerobots_2022)/launch/robot_controllers_spawner.launch"/> 
+  <include file="$(find ros_autonomous_manipulator_mobilerobot)/launch/robot_controllers_spawner.launch"/> 
 
   <!-- open gazebo and load world -->
   <arg name="gui" default="false"/>
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name" value="$(find assessmentmobilerobots_2022)/worlds/assessment_with_boxes.world"/>
+    <arg name="world_name" value="$(find ros_autonomous_manipulator_mobilerobot)/worlds/assessment_with_boxes.world"/>
     <arg name="paused" value="false"/>
     <arg name="use_sim_time" value="true"/>
     <arg name="gui" value="$(arg gui)"/>
@@ -16,6 +16,6 @@
   </include>
   
   <!-- run script to move boxes to a different place every time -->  
-  <node name="move" pkg="assessmentmobilerobots_2022" type="move_semi_random" />
+  <node name="move" pkg="ros_autonomous_manipulator_mobilerobot" type="move_semi_random" />
 </launch>
 

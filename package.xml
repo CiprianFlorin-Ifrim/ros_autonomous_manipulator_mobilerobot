@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>assessmentmobilerobots_2022</name>
+  <name>ros_autonomous_manipulator_mobilerobot</name>
   <version>0.0.0</version>
-  <description>assessmentmobilerobots_2022 package</description>
+  <description>ros_autonomous_manipulator_mobilerobot package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->

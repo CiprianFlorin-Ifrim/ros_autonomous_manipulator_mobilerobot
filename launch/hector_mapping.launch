@@ -29,7 +29,7 @@
 
   <arg name="gui" default="true"/>
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name" value="$(find assessmentmobilerobots_2022)/worlds/assessment.world"/>
+    <arg name="world_name" value="$(find ros_autonomous_manipulator_mobilerobot)/worlds/assessment.world"/>
     <arg name="paused" value="false"/>
     <arg name="use_sim_time" value="true"/>
     <arg name="gui" value="$(arg gui)"/>

@@ -1,6 +1,4 @@
-# assessmentmobilerobots_2022
-Files for Mobile Robots - PDE3432 - Assessment III 2022
-This repository contains all the files needed to run the package.
+This repository contains all the files needed to run the package consitsting of a custom URDF/XACRO robot with the Navigation Stack and Joint Trajectory controller.
 
 
 Instructions to install:
@@ -49,9 +47,3 @@ Directory explanation:
 - rviz: different configurations for RVIZ in function of what file has been launched (teleop, gui or navigation)
 - map: contains 2 maps which have been generated with the turtlebot, but my robot can do Hector Mapping as well with RFK localisation.
 
-Notes:
-- I am available for a Zoom meeting to explain anything, if requested.
-- Watch the video "presentation" in the demo folder, as it goes over everything available/developed.
-- I have added a 3s delay to the move_random script as the node would crash if all the controllers and the world wouldn't be loaded fast enough, issue caused by cpu or cache.
-- The wheels have a PID controller with tuned values, however I have removed the PID from the manipulator arm joints as the PID was drasticly reducing the speed of the movements, and optimal values have not been found for the simulation.
-- The manipulator_arm branch has been merged with the main branch and deleted after.
