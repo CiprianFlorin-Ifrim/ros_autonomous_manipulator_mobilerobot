@@ -1,29 +1,29 @@
 This repository contains all the files needed to run the package consitsting of a custom URDF/XACRO robot with the Navigation Stack and Joint Trajectory controller.
-![URDF Robot](https://user-images.githubusercontent.com/94687473/151810045-e1a3b6e8-002b-4188-aef8-68717f377d66.png)
 
+![URDF Robot](https://user-images.githubusercontent.com/94687473/151810045-e1a3b6e8-002b-4188-aef8-68717f377d66.png)
 https://user-images.githubusercontent.com/94687473/151810094-26261796-5dab-4566-bc13-6bc5b9d60cdd.mp4
 
 
 
 Instructions to install:
-1) Change directory to workspace: cd ~/catkin_ws/src/
+1) Change directory to workspace: `cd ~/catkin_ws/src/`
 2) Git clone the repository in the src directory of the workspace.
-3) "catkin_make" at the root of the workspace
-4) source ~/catkin_ws/devel/setup.bash
+3) `catkin_make` at the root of the workspace
+4) `source ~/catkin_ws/devel/setup.bash`
 
 
 ROS Requirements:
 1) Run the following to update the navigation stack for ROS Noetic:
-$ sudo apt-get update
+`$ sudo apt-get update
 $ sudo apt-get install ros-noetic-move-base
 $ sudo apt-get install ros-noetic-map-server
 $ sudo apt-get install ros-noetic-amcl
 $ sudo apt-get install ros-noetic-eband-local-planner
-$ sudo apt-get install ros-noetic-global-planner
+$ sudo apt-get install ros-noetic-global-planner`
 
 2) Run the following command to install opencv: 
-$ sudo apt-get install ros-noetic-cv-bridge
-$ sudo apt-get install ros-noetic-vision-opencv
+`$ sudo apt-get install ros-noetic-cv-bridge
+$ sudo apt-get install ros-noetic-vision-opencv`
 
 
 4) This step is not mandatory as it only affects the material colours in Gazebo. The file "gazebo.material" present under the model folder, should be copy and pasted in place of the system one.
