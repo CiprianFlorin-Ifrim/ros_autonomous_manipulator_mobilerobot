@@ -1,4 +1,8 @@
 This repository contains all the files needed to run the package consitsting of a custom URDF/XACRO robot with the Navigation Stack and Joint Trajectory controller.
+![URDF Robot](https://user-images.githubusercontent.com/94687473/151810045-e1a3b6e8-002b-4188-aef8-68717f377d66.png)
+
+https://user-images.githubusercontent.com/94687473/151810094-26261796-5dab-4566-bc13-6bc5b9d60cdd.mp4
+
 
 
 Instructions to install:
